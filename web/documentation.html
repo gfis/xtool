@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+ * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>xtool Documentation</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+<body>
+<h2>punctum xtool - Overview</h2>
+<p>
+<strong><a href="./index.jsp">xtool</a></strong></em> is a collection of tools for XML processing
+with special focus on schema quality and namespace consistency.
+All tools are implemented in Java 1.4.
+The programmatic
+interface is described in the <a href="docs/api/index.html">API documentation</a>.
+</p>
+<p>
+    Currently the collection contains:
+    <ul>
+        <li><a href="#SchemaList">SchemaList</a> - linear W3C XML schema representation</li>
+        <li><a href="#XmlnsPrefix">XmlnsPrefix</a> - modification of XMLnamespace prefixes</li>
+        <li><a href="#XmlnsXref">XmlnsXref</a> - XML namespace crossreference</li>
+        <li><a href="#XPathSelect">XPathSelect</a> - Evaluation of an XPath expression</li>
+    </ul>
+</p>
+
+<a name="SchemaList" />
+<h2>SchemaList - List the Element Tree of a W3C XML Schema</h2>
+<p>
+Starting with the first xs:element definition, the type hierarchy of
+a W3C schema file is recursively expanded.
+The output is a linear, indented list of the unfolded possible substructures,
+the leaf XML elements and their attributes.
+</p><p>
+Optionally values may be generated, and the tool can generate comments which show the
+schema type, data type, restrictions and annotations attached to the
+elements. With value generation and a selection of the first choice, the output
+will be a well-formed XML instance which usually validates against the input schema.
+This representation has the big advantage that it shows both
+the schema design and a real instance of that schema, both combined
+in a single XML document.
+</p><p>
+The schema list can be shown as HTML (the default), plain text, pure XML or
+in tab separated format which is suitable for MS-Excel. For HTML, the start
+tags have a link showing the XPath to the element.
+In Excel, columns can easily be hidden or appended. Such a worksheet is
+then a good base for the development of additional restrictions, mapping rules
+and the like.
+</p><p>
+The tool may be called on a commandline or from a web page. The following
+optional settings may be specified:
+<ul>
+    <li><strong><tt>-c</tt></strong> show comments with types, restrictions, patterns etc.</li>
+    <li><strong><tt>-e enc</tt></strong> source file encoding, default: UTF-8</li>
+    <li><strong><tt>-e enc</tt></strong> target file encoding, default: UTF-8</li>
+    <li><strong><tt>-f</tt></strong> show first alternative of choices only</li>
+    <li><strong><tt>-m mode</tt></strong> output mode: "html" (default), "plain", "tsv" (for MS-Excel) or "xml"
+    <li><strong><tt>-s</tt></strong> show start tags only (no end tags)</li>
+    <li><strong><tt>-v</tt></strong> generate element values</li>
+</ul>
+These options may be combined. Typical settings are:
+<ul>
+    <li><strong><tt>-cvf</tt></strong> generate a well-formed, commented XML instance from the schema</li>
+    <li><strong><tt>-s</tt></strong> only show the minimal indented element structure without end tags</li>
+    <li><strong><tt>-cv -m tsv</tt></strong> generate an Excel worksheet with comments and values</li>
+    <li><strong><tt>-v -m xml</tt></strong> show elements with values in the browser's XML representation (elements can be collapsed)</li>
+    <li><strong><tt>-vf -m plain</tt></strong> generate a concise XML instance file which may be stored and validated</li>
+</ul>
+</p><p>
+In the web interface, the user specifies the desired options and uploads the input schema file
+to the application on the web server.
+
+<h3>Example for HTML output (-cv -m html)</h3>
+&lt;<a href="data:text/plain,/Document"><span class="bold">Document</span></a> <span class="bold">xmlns</span>="<span class="valu">urn:sepade:xsd:pain.001.001.02</span>"&gt;<span class="valu"></span>&lt;!--[1..1] Document   --&gt;<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02"><span class="bold">pain.001.001.02</span></a>&gt;<span class="valu"></span>&lt;!--[1..1] pain.001.001.02   --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr"><span class="bold">GrpHdr</span></a>&gt;<span class="valu"></span>&lt;!--[1..1] GroupHeader20   --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/MsgId"><span class="bold">MsgId</span></a>&gt;<span class="valu">Max35Text</span>&lt;/MsgId&gt;&lt;!--[1..1] Max35Text string  1..35 --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/CreDtTm"><span class="bold">CreDtTm</span></a>&gt;<span class="valu">2007-06-29T05:30:00Z</span>&lt;/CreDtTm&gt;&lt;!--[1..1] ISODateTime dateTime  --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/NbOfTxs"><span class="bold">NbOfTxs</span></a>&gt;<span class="valu">09</span>&lt;/NbOfTxs&gt;&lt;!--[1..1] Max15NumericText string  /[0-9]{1,15}/ --&gt;<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/CtrlSum"><span class="bold">CtrlSum</span></a>&gt;<span class="valu">1</span>&lt;/CtrlSum&gt;&lt;!--[0..1] DecimalNumber decimal  L18.17  ! <span class="doct">SEPA AOS Can optionally be used as specification for the total amount of the file. </span>--&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/Grpg"><span class="bold">Grpg</span></a>&gt;<span class="valu">GRPD</span>&lt;/Grpg&gt;&lt;!--[1..1] Grouping2Code string  "GRPD"  ! <span class="doct">Only the GRPD option may be used.</span>--&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty"><span class="bold">InitgPty</span></a>&gt;<span class="valu"></span>&lt;!--[1..1] PartyIdentification20    ! <span class="doct">Initiating party. </span>--&gt;<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Nm"><span class="bold">Nm</span></a>&gt;<span class="valu">Max70Text</span>&lt;/Nm&gt;&lt;!--[1..1] Max70Text string  1..70  ! <span class="doct">AT-02 Name of the originator.</span>--&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/PstlAdr"><span class="bold">PstlAdr</span></a>&gt;<span class="valu"></span>&lt;!--[0..1] PostalAddress5    ! <span class="doct">AT-03 Address of the originator.</span>--&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/PstlAdr/AdrLine"><span class="bold">AdrLine</span></a>&gt;<span class="valu">Max70Text</span>&lt;/AdrLine&gt;&lt;!--[1..2] Max70Text string  1..70 --&gt;<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/PstlAdr/Ctry"><span class="bold">Ctry</span></a>&gt;<span class="valu">AZ</span>&lt;/Ctry&gt;&lt;!--[1..1] CountryCode string  /[A-Z]{2,2}/ --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/PstlAdr&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id"><span class="bold">Id</span></a>&gt;<span class="valu"></span>&lt;!--[0..1] Party5Choice    ! <span class="doct">AT-10 - ID of the originator. Recommendation: This field should not be used.</span>--&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,"><span class="bold">__unresolvedChoice__</span></a>&gt;<span class="valu"></span>&lt;!--[1..1]    --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id/OrgId"><span class="bold">OrgId</span></a>&gt;<span class="valu"></span>&lt;!--[1..1] OrganisationIdentification2   --&gt;<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id/OrgId/BIC"><span class="bold">BIC</span></a>&gt;<span class="valu">COBADEFF</span>&lt;/BIC&gt;&lt;!--[0..1] BICIdentifier string  /[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}/ --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id/OrgId/IBEI"><span class="bold">IBEI</span></a>&gt;<span class="valu">AZBDFHJNP0</span>&lt;/IBEI&gt;&lt;!--[0..1] IBEIIdentifier string  /[A-Z]{2,2}[B-DF-HJ-NP-TV-XZ0-9]{7,7}[0-9]{1,1}/ --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id/OrgId/BEI"><span class="bold">BEI</span></a>&gt;<span class="valu">BEIADEFF</span>&lt;/BEI&gt;&lt;!--[0..1] BEIIdentifier string  /[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}/ --&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<a href="data:text/plain,/Document/pain.001.001.02/GrpHdr/InitgPty/Id/OrgId/EANGLN"><span class="bold">EANGLN</span></a>&gt;<span class="valu">0909090909090</span>&lt;/EANGLN&gt;&lt;!--[0..1] EANGLNIdentifier string  /[0-9]{13,13}/ --&gt;<br />
+...
+<h3>Example for output in MS-Excel</h3>
+<img alt="schema list in Excel worksheet" src="list-mtsv.jpg" />
+<p>
+The columns of the Excel worksheet are filled as follows:
+<table border="1" cellspacing="0" cellpadding="2">
+    <tr><td>A</td><td>indented elements with generated values</td></tr>
+    <tr><td>B</td><td>cardinality, multiplicity: minOccurs and maxOccurs</td></tr>
+    <tr><td>C</td><td>schema type</td></tr>
+    <tr><td>D</td><td>elementary XML datatype</td></tr>
+    <tr><td>E</td><td>restrictions: string lengths, number ranges, patterns, value enumerations</td></tr>
+    <tr><td>F</td><td>annotations attached to the element</td></tr>
+    <tr><td>G</td><td>absolute XPath to this element node</td></tr>
+    <tr><td>H</td><td>a single ";" in all relevant (non-descriptive) rows, useful for hiding rows</td></tr>
+</table>
+
+<h3>Special Rows</h3>
+<p>
+There are two sorts of special rows which are useful for
+the description of the schema, but which will not lead to a valid XML instance.
+</p>
+<ol>
+    <li>With option <tt>"-c"</tt>, any attribute is shown on separate line starting with "@",
+        since attributes also have types, restrictions etc.</>
+    <li>Without option <tt>"-f"</tt>, any <tt>&lt;xs:choice&gt;</tt> leads to an artificial element
+        <tt>&lt;__unresolvedChoice__&gt;</tt> in order to make visible that this choice must
+        still be resolved to yield a valid XML instance. This resolution could be realized
+        by an XSLT stylesheet or by manual editing.
+</ol>
+
+<h3>Value Generation</h3>
+<p>
+The tool tries to generate validating values for the most common cases. This works rather well
+for the <a href="http://www.iso20022.org">ISO 20022</a> message schemata relevant to SEPA (camt, pacs, pain families), but it will
+possibly fail for complicated patterns or different application areas.
+</p><p>
+The values are generated with a fixed set of rules which depend on the elementary data type,
+sometimes the schema type, and the restrictions. The following table shows these rules:
+<table border="1" cellspacing="0" cellpadding="2">
+    <tr><th>Datatype</th><th>Restriction, Schema Type</th><th>Generated Value</th></tr>
+    <tr><td>boolean</td><td>&nbsp;</td><td><span class="valu">true</span></td></tr>
+    <tr><td>decimal</td><td>&nbsp;</td><td><span class="valu">1</span></td></tr>
+    <tr><td>dataTime</td><td>&nbsp;</td><td><span class="valu">2007-06-29T04:30:00Z</span>&nbsp;&nbsp;&nbsp;(?)</td></tr>
+    <tr><td>date</td><td>&nbsp;</td><td><span class="valu">2007-06-29</span></td></tr>
+    <tr><td>NCName</td><td>&nbsp;</td><td><span class="valu">NCName</span></td></tr>
+    <tr><td>decimal</td><td>&nbsp;</td><td><span class="valu">1</span></td></tr>
+    <tr><td>string</td><td>(pattern)</td><td>(the characters from the pattern repeated up to a minimal length)</td></tr>
+    <tr><td>string</td><td>(length)</td><td>(schema type name truncated or padded with letters)</td></tr>
+    <tr><td>string</td><td>(enumeration)</td><td>(the first alternative)</td></tr>
+    <tr><td>string</td><td>CurrencyCode</td><td><span class="valu">EUR</span></td></tr>
+    <tr><td>string</td><td>IBANIdentifier</td><td><span class="valu">DE28500400000123456589</span></td></tr>
+    <tr><td>string</td><td>BICIdentifier</td><td><span class="valu">COBADEFF</span></td></tr>
+    <tr><td>string</td><td>BEIIdentifier</td><td><span class="valu">PUTMDEEM</span></td></tr>
+    <tr><td>string</td><td>CHIPSUniversalIdentifier</td><td><span class="valu">CH012345</span></td></tr>
+</table>
+
+
+<a name="XmlnsPrefix" />
+<h2>XmlnsPrefix - Rewrite XML Namespace Prefixes in an XML file</h2>
+<p>
+Sometimes it is necessary to change the namespace prefixes in an XML document, to remove one
+(thus making it the default) or to change the default to an explicit prefix. The latter
+operation is rather tedious when done manually. With <strong>XmlnsPrefix</strong>
+one or more mappings from
+one prefix to another can be specified. The XML file to be modified must be uploaded
+to the web server, and the resulting, modified XML file is shown in the browser.
+</p>
+<dd>Options:
+    <ul>
+        <li><tt>-e enc</tt> source file encoding, default: UTF-8</li>
+        <li><tt>-p old1:new1</tt> change prefix "old1" to prefix "new1" (both may be empty)</li>
+        <li><tt>-p old2:new2</tt> ...</li>
+        <li><tt>...</tt></li>
+    </ul>
+</dd>
+
+<a name="XmlnsXref" />
+<h2>XmlnsXref - Cross-Reference of XML Namespace URIs and their Prefixes in a Set of XML Files</h2>
+<p>
+Even very subtle differences in the namespace URIs of XML documents, schemata and stylesheets
+lead almost inevitably to bad results (when namespaces are evaluated at all). Often it is
+difficult to track namespace URI modifications in a set of related XML files. <strong>XmlnsXref</strong>
+takes several files (on the commandline) or a ZIP file collection (in the web interface)
+and shows a sorted crossreference list. For each namespace URI the files are shown where
+the URI occurs, optionally with the prefix used for that namespace URI.
+</p>
+<dd>Options:
+    <ul>
+        <li><tt>-e enc</tt> source file encoding, default: UTF-8</li>
+        <li><tt>-p</tt> show namespace prefixes</li>
+        <li><tt>-zip</tt> input file is zip archive</li>
+    </ul>
+</dd>
+<h4>Example:</h4>
+<table border="1" cellspacing="0" cellpadding="2">
+<tr><td>
+<dl><dt><a name="(missing URI)" />(missing URI)</dt>
+<dd>(default): pacs8.xml</dd>
+<dt>http://schema.punctum.com/test</dt>
+<dd>sept: gfis2906.xml</dd>
+
+<dd>sept: pacs8.xml</dd>
+<dd>(default): test2906.xml</dd>
+<dt><a name="urn_S2SCTIcf_xsd__SCTIcfBlkCredTrf" />urn:S2SCTIcf:xsd:$SCTIcfBlkCredTrf</dt>
+<dd>S2SCTIcf: gfis2906.xml</dd>
+<dd>S2SCTIcf: pacs8.xml</dd>
+<dd>S2SCTIcf: test2906.xml</dd>
+<dt><a name="urn_iso_std_iso_20022_tech_xsd_S2SCTpacs_008_001_01" />urn:iso:std:iso:20022:tech:xsd:S2SCTpacs.008.001.01</dt>
+<dd>sw8: pacs8.xml</dd>
+<dt><a name="urn_iso_std_iso_20022_tech_xsd_pacs_008_001_01" />urn:iso:std:iso:20022:tech:xsd:pacs.008.001.01</dt>
+
+<dd>(default): gfis2906.xml</dd>
+<dd>sw8: test2906.xml</dd>
+</dl>
+</td></tr>
+</table>
+
+<a name="XPathSelect" />
+<h2>XPathSelect - Evaluation of an XPath expression</h2>
+<p>
+Instead of writing a complete XSLT stylesheet,
+it is sometimes interesting to apply a single XPath expression to an XML document.
+This tool shows the resulting node set, enclosed in a &lt;result&gt; element.
+</p>
+<dd>Options:
+    <ul>
+        <li><tt>-e enc</tt> target file encoding, default: UTF-8</li>
+        <li><tt>expr</tt> the XPath expression to be applied to the XML document</li>
+    </ul>
+</dd>
+
+<p>
+<!--
+    See also the <a href="developer.html">hints for developers</a>.
+    <br />
+-->
+    Back to the <a href="index.jsp">xtool input form</a>
+</p>
+<p>
+    <font size="-1">
+    Version 1.5, 2007-12-11<br />
+    Questions, remarks to: <a href="mailto:punctum@punctum.com">Dr. Georg Fischer</a>
+    </font>
+</p>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+ * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!--
+    ant-buildfile for commandline, web application and web service
+    @(#) $Id: build.xml 40 2008-09-08 06:41:22Z gfis $
+    2008-07-25: new names
+    2007-07-09: copied from dbat
+-->
+
+<project name="xtool" default="dist" basedir=".">
+    <property name="app.name"           value="xtool"/>
+    <property name="app.version"        value="1.1"/>
+    <property name="app.main-class"     value="org.teherba.xtool.SchemaList"/>
+    <import file="build-import.xml" />
+    
+    <target name="generate">
+    <!--
+        <xslt in="${etc.home}/spec/Tooth.xml" style="../xtrans/etc/xslt/genRecord.xsl" 
+                out="${src.home}/org/teherba/xtool/ToothBeanBase.java" 
+        />
+	-->
+        <xslt in="${etc.home}/spec/Schema.xml" style="../xtrans/web/xslt/genRecord.xsl" 
+                out="${src.home}/org/teherba/xtool/SchemaBeanBase.java" 
+        />
+    </target>                                               
+
+    <target name="test" depends="test.list,test.prefix,test.xref" />
+
+    <target name="test.xref"><!-- show a namespace crossreference -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.xtool.XmlnsXref" />
+            <param name="args"  value="-p -zip test/test.zip" />
+        </antcall>
+    </target>
+
+    <target name="test.prefix"><!-- rename same namespace prefixes -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.xtool.XmlnsPrefix" />
+            <param name="args"  value="-e UTF-8 -e ISO-8859-1 -p pi1:pn1 test/pain.001.001.02.xml" />
+        </antcall>
+    </target>
+
+    <target name="test.list">  <!-- show the element tree of a W3C schema -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.xtool.SchemaList" />
+            <param name="args"  value="-cvf -m html test/camt.052.001.01.xsd" />
+        </antcall>
+    </target>
+
+    <target name="test.tree">  <!-- show the element tree of a W3C schema -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.xtool.SchemaTree" />
+            <param name="args"  value="-t -f -c -v -h test/camt.052.001.01.xsd" />
+        </antcall>
+    </target>
+
+</project>

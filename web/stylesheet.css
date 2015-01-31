@@ -1,0 +1,20 @@
+/*	xtool.css - Cascaded Style Sheet
+	@(#) $Id: stylesheet.css 40 2008-09-08 06:41:22Z gfis $
+	2007-12-04: adapted for xtool
+	2000-11-20,	Georg Fischer
+*/
+dt	
+	{ font-weight:bold }
+tt
+	{ font-family:Courier; }
+td
+	{ vertical-align:top }
+body
+	{ background-color:lemonchiffon }
+
+.mono { font-family:Courier; }
+.bold { font-family:Courier;font-weight:bold; }
+.doct { background-color:gainsboro }
+.valu { font-family:Courier;font-weight:bold;color:green; }
+body,p,h1,h2,h3,h4,dl,dd,dt,ul,ol,li,div,td,th,address,blockquote,nobr,b,i,a,br,img
+      { font-family:Verdana,Arial,sans-serif;background-color:lemonchiffon }
