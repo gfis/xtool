@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
+    ant-buildfile for commandline, web application and web service
+    @(#) $Id: build.xml 40 2008-09-08 06:41:22Z gfis $
+    2016-08-29: tomcat.base|.home
+    2008-07-25: new names
+    2007-07-09: copied from dbat
+-->
+<!--
  * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +21,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<!--
-    ant-buildfile for commandline, web application and web service
-    @(#) $Id: build.xml 40 2008-09-08 06:41:22Z gfis $
-    2008-07-25: new names
-    2007-07-09: copied from dbat
--->
 
 <project name="xtool" default="dist" basedir=".">
     <property name="app.name"           value="xtool"/>
     <property name="app.version"        value="1.1"/>
     <property name="app.main-class"     value="org.teherba.xtool.SchemaList"/>
+    <property name="tomcat.base"        value="/var/lib/tomcat" />
+    <property name="tomcat.home"        value="/usr/share/tomcat" />
     <import file="build-import.xml" />
     
     <target name="generate">

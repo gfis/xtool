@@ -1,9 +1,9 @@
 /*  SchemaBean.java - Bean for a start or end of an element in a linear representation of a W3C Schema
  *  @(#) $Id: SchemaBean.java 523 2010-07-26 17:57:50Z gfis $
- *	2012-02-13: .trim() in method 'emphasize'
- *	2008-07-25: renamed from 'ToothBean'
- *	2008-06-17: a lot more W3C datatypes
- *	2008-02-13: Java 1.5 types
+ *  2012-02-13: .trim() in method 'emphasize'
+ *  2008-07-25: renamed from 'ToothBean'
+ *  2008-06-17: a lot more W3C datatypes
+ *  2008-02-13: Java 1.5 types
  *  2007-11-09: representation methods
  *  2007-09-20, Georg Fischer: compareTo, constructor etc.
  *
@@ -38,7 +38,7 @@ import  org.w3c.dom.NamedNodeMap;
 import  org.apache.log4j.Logger;
 
 /** Bean for a start or end of an element in a linear representation of a W3C Schema.
- *	A "bean" is an element of a "array", an array list of beans.
+ *  A "bean" is an element of a "array", an array list of beans.
  *  Extends the generated {@link SchemaBeanBase} by unconventional properties,
  *  enumerations, value generation and representation methods.
  *  @author Dr. Georg Fischer
@@ -76,7 +76,7 @@ public class SchemaBean extends SchemaBeanBase {
     /** string which starts and separates XPath elements */
     public static final String XPATH_SEPARATOR  = "/";
 
-	// Caution, the following codes must be kept in parallel with {@link org.teherba.xtool.SchemaList.formats} */
+    // Caution, the following codes must be kept in parallel with {@link org.teherba.xtool.SchemaList.formats} */
     /** code for HTML output format */
     public static final int MODE_HTML     = 0;
     /** code for plain text output format */
@@ -118,11 +118,11 @@ public class SchemaBean extends SchemaBeanBase {
         NamedNodeMap attrs = node.getAttributes();
         Node nameAttr = attrs.getNamedItem("name");
         if (nameAttr == null) {
-	        nameAttr = attrs.getNamedItem("ref");
-        } 
+            nameAttr = attrs.getNamedItem("ref");
+        }
         if (nameAttr != null) {
             setNodeName(nameAttr.getNodeValue());
-        } 
+        }
         setLevel(mother.getLevel() + 1);
         setAnchIndex(mother.getAnchIndex()); // default: describe same anchestor
     } // constructor 2
@@ -150,7 +150,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     //----------------
     /** hashmap for attributes, restrictions etc. */
-    protected HashMap/*<1.5*/<String, Object>/*1.5>*/ restrictions;
+    protected HashMap<String, Object> restrictions;
 
     /** Gets an Object from the hashmap for attributes, restrictions etc.
      *  @return Object in the hashmap for attributes, restrictions etc.
@@ -170,24 +170,24 @@ public class SchemaBean extends SchemaBeanBase {
      */
     public void putRestriction(String key, Object value) {
         if (restrictions == null) {
-            restrictions = new HashMap/*<1.5*/<String, Object>/*1.5>*/(16);
+            restrictions = new HashMap<String, Object>(16);
         }
         restrictions.put(key, value);
     } // putRestriction
 
-	/** key for attributes in the restrictions map */
-	public static final String ATTRIBUTES_KEY = "attribute";
-	
+    /** key for attributes in the restrictions map */
+    public static final String ATTRIBUTES_KEY = "attribute";
+
     /** Gets the map of attributes from the restrictions
      *  @return ordered map of attributes stored in the hashmap for attributes, restrictions etc.
      */
-    public TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/ getAttributeMap() {
-        TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/ result = null;
+    public TreeMap<String, SchemaBean> getAttributeMap() {
+        TreeMap<String, SchemaBean> result = null;
         if (restrictions != null) {
-            result = (TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/) restrictions.get(ATTRIBUTES_KEY);
+            result = (TreeMap<String, SchemaBean>) restrictions.get(ATTRIBUTES_KEY);
         } // restrictions != null
         if (result == null) {
-        	result = new TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/();
+            result = new TreeMap<String, SchemaBean>();
         }
         return result;
     } // getAttributeMap
@@ -200,26 +200,26 @@ public class SchemaBean extends SchemaBeanBase {
      */
     public void putAttribute(String attrName, SchemaBean bean2) {
         if (restrictions == null) {
-            restrictions = new HashMap/*<1.5*/<String, Object>/*1.5>*/(16);
+            restrictions = new HashMap<String, Object>(16);
         }
-       	TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/ attributes = getAttributeMap();
+        TreeMap<String, SchemaBean> attributes = getAttributeMap();
         attributes.put(attrName, bean2);
         putRestriction(ATTRIBUTES_KEY, attributes);
     } // putAttribute
 
-	/** key for enumeration in the restrictions map */
-	public static final String ENUMERATION_KEY = "enumeration";
-	
+    /** key for enumeration in the restrictions map */
+    public static final String ENUMERATION_KEY = "enumeration";
+
     /** Gets the enumeration from the restrictions
      *  @return ordered set of strings in the hashmap for attributes, restrictions etc.
      */
-    public TreeSet/*<1.5*/<String>/*1.5>*/ getEnumerationSet() {
-        TreeSet/*<1.5*/<String>/*1.5>*/ result = null;
+    public TreeSet<String> getEnumerationSet() {
+        TreeSet<String> result = null;
         if (restrictions != null) {
-            result = (TreeSet/*<1.5*/<String>/*1.5>*/) restrictions.get(ENUMERATION_KEY);
+            result = (TreeSet<String>) restrictions.get(ENUMERATION_KEY);
         } // restrictions != null
         if (result == null) {
-        	result = new TreeSet/*<1.5*/<String>/*1.5>*/();
+            result = new TreeSet<String>();
         }
         return result;
     } // getEnumerationSet
@@ -243,7 +243,7 @@ public class SchemaBean extends SchemaBeanBase {
     //----------------
 
     /** Compares this bean - its tag and data type - with another one.
-     *	Simplified elements are not supported - the comparision must happen before {@link SchemaArray#simplify}.
+     *  Simplified elements are not supported - the comparision must happen before {@link SchemaArray#simplify}.
      *  @param bean2 right comparision operand
      *  @return -1 / 0 / 1 if this bean1 is &lt; / = / &gt; bean2
      */
@@ -265,18 +265,18 @@ public class SchemaBean extends SchemaBeanBase {
     } // containsEnumeration
 
     /** Determines whether this bean has a broader definition than the parameter bean.
-     *	The two beans must be "equal" with respect to tag and data type.
-     *	This is an oversimplified implementation which - for example - does not (yet) care for 
-     *	precise pattern and fraction containment.
-     *	Simplified elements are not supported - the comparision must happen before {@link SchemaArray#simplify}.
+     *  The two beans must be "equal" with respect to tag and data type.
+     *  This is an oversimplified implementation which - for example - does not (yet) care for
+     *  precise pattern and fraction containment.
+     *  Simplified elements are not supported - the comparision must happen before {@link SchemaArray#simplify}.
      *  @param bean2 restricted bean
      *  @return whether this bean is broader than the parameter bean
      */
     public boolean contains(SchemaBean bean2) {
         boolean result= this.getNodeName().compareTo(bean2.getNodeName()) == 0
-        			&&	this.getMinOccurs() <= bean2.getMinOccurs()
-        		  	&&	this.getMaxOccurs() >= bean2.getMaxOccurs()
-        		  	;
+                    &&  this.getMinOccurs() <= bean2.getMinOccurs()
+                    &&  this.getMaxOccurs() >= bean2.getMaxOccurs()
+                    ;
         return result;
     } // contains
 
@@ -290,9 +290,9 @@ public class SchemaBean extends SchemaBeanBase {
     /** Generates an element's value (content) from a
      *  regular expression pattern terminated by a slash, for example
      *  <tt>[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}/</tt> or
-     *  <tt>[+]{0,1}[0-9]{1,15}/</tt>. 
-     * 	This is an oversimplified algorithm which works well for SEPA, 
-     *	but which will fail in the general case.
+     *  <tt>[+]{0,1}[0-9]{1,15}/</tt>.
+     *  This is an oversimplified algorithm which works well for SEPA,
+     *  but which will fail in the general case.
      *  @param pat regular expression pattern
      *  @return generated value
      */
@@ -332,8 +332,8 @@ public class SchemaBean extends SchemaBeanBase {
     } // getValueFromPattern
 
     /** Generates an element's generic value (content) from the bean's other properties
-     *	@return some standard string value 
-     *	See <a href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">http://www.w3.org/TR/2001/REC-xmlschema-2-20010502</a> 
+     *  @return some standard string value
+     *  See <a href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">http://www.w3.org/TR/2001/REC-xmlschema-2-20010502</a>
      *  or a later version of W3C's Recommendation, XML Schema Part 2: Datatypes
 <pre>
 3.2 Primitive datatypes
@@ -387,11 +387,11 @@ public class SchemaBean extends SchemaBeanBase {
     public String toValueString() {
         StringBuffer result = new StringBuffer(64);
         // String dataType = getDataType(); // without the prefix
-		TreeSet/*<1.5*/<String>/*1.5>*/ sortedEnums = getEnumerationSet();
-		if (sortedEnums != null && sortedEnums.size() > 0) {
-			result.append((String) sortedEnums.first());
+        TreeSet<String> sortedEnums = getEnumerationSet();
+        if (sortedEnums != null && sortedEnums.size() > 0) {
+            result.append((String) sortedEnums.first());
         } else if (dataType != null) { // contains a W3C data type
-            if (false) { 
+            if (false) {
             } else if (dataType.startsWith("boolean")) {
                 result.append("true");
             } else if (dataType.startsWith("decimal")) {
@@ -508,8 +508,8 @@ public class SchemaBean extends SchemaBeanBase {
         String result = "<";
         switch (mode) {
             case MODE_HTML:
-				result = "&lt;";
-            	break;
+                result = "&lt;";
+                break;
             case MODE_TSV:
             case MODE_PLAIN:
             case MODE_XML:
@@ -527,8 +527,8 @@ public class SchemaBean extends SchemaBeanBase {
         String result = ">";
         switch (mode) {
             case MODE_HTML:
-				result = "&gt;";
-            	break;
+                result = "&gt;";
+                break;
             case MODE_TSV:
             case MODE_PLAIN:
             case MODE_XML:
@@ -546,11 +546,11 @@ public class SchemaBean extends SchemaBeanBase {
         String result = "<!--";
         switch (mode) {
             case MODE_HTML:
-				result = "&lt;!--";
-            	break;
+                result = "&lt;!--";
+                break;
             case MODE_TSV:
-				result = "";
-				break;
+                result = "";
+                break;
             case MODE_PLAIN:
             case MODE_XML:
             default:
@@ -567,11 +567,11 @@ public class SchemaBean extends SchemaBeanBase {
         String result = "-->";
         switch (mode) {
             case MODE_HTML:
-				result = "--&gt;";
-            	break;
+                result = "--&gt;";
+                break;
             case MODE_TSV:
-            	result = "";
-				break;
+                result = "";
+                break;
             case MODE_PLAIN:
             case MODE_XML:
             default:
@@ -579,18 +579,18 @@ public class SchemaBean extends SchemaBeanBase {
         } // switch mode
         return result;
     } // gtComt
-    
+
     /** Returns some text with special HTML emphasis defined by a Cascaded Stylesheet property
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @param css CSS class designator for emphasis; 
-     *	the styles for the classes are defined in the HTML header in {@link SchemaArray#toHeaderString}
+     *  @param css CSS class designator for emphasis;
+     *  the styles for the classes are defined in the HTML header in {@link SchemaArray#toHeaderString}
      *  @param text text to be emphasized
      */
     public static String emphasize(int mode, String css, String text) {
-        return (mode == MODE_HTML) 
-        		? "<span class=\"" + css + "\">" + text.trim() + "</span>"
-        		: text.trim()
-        		;
+        return (mode == MODE_HTML)
+                ? "<span class=\"" + css + "\">" + text.trim() + "</span>"
+                : text.trim()
+                ;
     } // emphasize
 
     /** Represents the starting tag of the element
@@ -607,22 +607,22 @@ public class SchemaBean extends SchemaBeanBase {
             case DISPLAY_ELEMENT:
                 result.append(lt(mode));
                 if (mode == MODE_HTML && getMaxOccurs() > 0) {
-                	result.append("<a href=\"data:text/plain," + getXPath() + "\">"
+                    result.append("<a href=\"data:text/plain," + getXPath() + "\">"
                             + emphasize(mode, "bold", this.getNodeName()) + "</a>");
                 } else {
-                	result.append(this.getNodeName());
-            	}
+                    result.append(this.getNodeName());
+                }
                 result.append(toAttributesString(mode));
                 result.append(gt(mode));
                 break;
             case DISPLAY_ATTRIBUTE:
                 result.append(lt(mode) + "!--@");
                 if (mode == MODE_HTML) {
-                	result.append("<a href=\"data:text/plain," + getXPath() + "\">"
+                    result.append("<a href=\"data:text/plain," + getXPath() + "\">"
                             + emphasize(mode, "bold", this.getNodeName()) + "</a>");
                 } else {
-                	result.append(this.getNodeName());
-            	}
+                    result.append(this.getNodeName());
+                }
                 result.append("--" + gt(mode));
                 break;
             case DISPLAY_COMMENT:
@@ -650,12 +650,12 @@ public class SchemaBean extends SchemaBeanBase {
                 result.append(this.getNodeName());
                 result.append(gt(mode));
                 break;
-        /*	attributes have no twin
-            case DISPLAY_ATTRIBUTE: 
+        /*  attributes have no twin
+            case DISPLAY_ATTRIBUTE:
                 result.append("\"");
                 break;
         */
-            case DISPLAY_COMMENT: 
+            case DISPLAY_COMMENT:
                 result.append(lt(mode) + "!--/");
                 result.append(this.getNodeName());
                 result.append("--" + gt(mode));
@@ -732,7 +732,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents the (abbreviated) XPath to the element
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @return a string representing the XPath expression 
+     *  @return a string representing the XPath expression
      */
     public String toXPathString(int mode) {
         StringBuffer result = new StringBuffer(128);
@@ -857,9 +857,9 @@ public class SchemaBean extends SchemaBeanBase {
         StringBuffer result = new StringBuffer(16);
         if (restrictions != null)
         try {
-            TreeMap/*<1.5*/<String, SchemaBean>/*1.5>*/ map = getAttributeMap();
+            TreeMap<String, SchemaBean> map = getAttributeMap();
             if (map != null) {
-                Iterator/*<1.5*/<String>/*1.5>*/ iter = map.keySet().iterator();
+                Iterator<String> iter = map.keySet().iterator();
                 while (iter.hasNext()) {
                     result.append(" ");
                     String key = (String) iter.next();
@@ -893,10 +893,10 @@ public class SchemaBean extends SchemaBeanBase {
         StringBuffer result = new StringBuffer(16);
         if (restrictions != null)
         try {
-            TreeSet/*<1.5*/<String>/*1.5>*/ sortedEnums = getEnumerationSet();
+            TreeSet<String> sortedEnums = getEnumerationSet();
             if (sortedEnums != null) {
                 result.append(" ");
-                Iterator/*<1.5*/<String>/*1.5>*/ iter = sortedEnums.iterator();
+                Iterator<String> iter = sortedEnums.iterator();
                 boolean first = true;
                 while (iter.hasNext()) {
                     if (first) {
@@ -1020,12 +1020,12 @@ public class SchemaBean extends SchemaBeanBase {
             Object obj = null;
             obj = getStringRestriction("appInfo");
             if (obj != null) {
-		        result.append(" ! ");
+                result.append(" ! ");
                 result.append(emphasize(mode, "doct", (String) obj));
             }
             obj = getStringRestriction("documentation");
             if (obj != null) {
-		        result.append(" ! ");
+                result.append(" ! ");
                 result.append(emphasize(mode, "doct", (String) obj));
             }
         } catch (Exception exc) {
@@ -1045,9 +1045,9 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents an entry in the array: element, attribute, comment
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *	@param startTagsOnly 1 if only start tags (and no end tags) should be shown
-     *	@param withComments 1 if comments (types, restrictions, annotations) should be shown for some modes
-     *	@param withValues 1 if values should be generated and shown for some modes
+     *  @param startTagsOnly 1 if only start tags (and no end tags) should be shown
+     *  @param withComments 1 if comments (types, restrictions, annotations) should be shown for some modes
+     *  @param withValues 1 if values should be generated and shown for some modes
      *  @return a string representing the entry
      */
     public String toString(int mode, int startTagsOnly, int withComments, int withValues) {
@@ -1055,59 +1055,59 @@ public class SchemaBean extends SchemaBeanBase {
         String separator = " ";
         switch (mode) {
             case MODE_TSV:
-				separator = "\t";
-				// fall thru
+                separator = "\t";
+                // fall thru
             case MODE_HTML:
             case MODE_PLAIN:
             case MODE_XML:
             default:
-            	switch (displayMode) {
-            		default:
-            		case DISPLAY_NONE:
-            			break;
-            		case DISPLAY_COMMENT:
-		                result.append(toLevelString             (mode));
-		                if (startEnd == START_TAG) {
-		                    result.append(toStartElementString  (mode));
-		                } else { // END_TAG
-		                    result.append(toEndElementString    (mode));
-		                }
-            			break;
-            		case DISPLAY_ATTRIBUTE: // attributes have no twin
-            		case DISPLAY_SIMPLE:
-            		case DISPLAY_ELEMENT:
-		                result.append(toLevelString             (mode));
-		                if (startEnd == START_TAG) {
-		                    result.append(toStartElementString  (mode));
-		                    if (withValues > 0) {
-		                    	result.append(emphasize(mode, "valu", toValueString()));
-		                    }
-		                  	if (startTagsOnly == 0 && displayMode == DISPLAY_SIMPLE) {
-			                    result.append(toEndElementString    (mode));
-		                  	}
-		                  	if (withComments > 0 && getMaxOccurs() > 0) {
-			                    result.append(ltComt(mode));
+                switch (displayMode) {
+                    default:
+                    case DISPLAY_NONE:
+                        break;
+                    case DISPLAY_COMMENT:
+                        result.append(toLevelString             (mode));
+                        if (startEnd == START_TAG) {
+                            result.append(toStartElementString  (mode));
+                        } else { // END_TAG
+                            result.append(toEndElementString    (mode));
+                        }
+                        break;
+                    case DISPLAY_ATTRIBUTE: // attributes have no twin
+                    case DISPLAY_SIMPLE:
+                    case DISPLAY_ELEMENT:
+                        result.append(toLevelString             (mode));
+                        if (startEnd == START_TAG) {
+                            result.append(toStartElementString  (mode));
+                            if (withValues > 0) {
+                                result.append(emphasize(mode, "valu", toValueString()));
+                            }
+                            if (startTagsOnly == 0 && displayMode == DISPLAY_SIMPLE) {
+                                result.append(toEndElementString    (mode));
+                            }
+                            if (withComments > 0 && getMaxOccurs() > 0) {
+                                result.append(ltComt(mode));
 
-			                    result.append(toMultiplicityString  (mode));
-			                    result.append(separator);
-			                    result.append(toBaseTypeString      (mode));
-			                    result.append(separator);
-			                    result.append(toDataTypeString      (mode));
-		                    	result.append(separator);
-			                    result.append(toRestrictionsString  (mode));
-		                    	result.append(separator);
-			                    result.append(toDocumentationString (mode));
-			                    result.append(gtComt(mode));
-		                	} // if maxOccurs > 0
-		                } else if (startTagsOnly == 0) { // END_TAG
-		                    result.append(toEndElementString    (mode));
-		                }
-		                break;
-		        } // switch displayMode
+                                result.append(toMultiplicityString  (mode));
+                                result.append(separator);
+                                result.append(toBaseTypeString      (mode));
+                                result.append(separator);
+                                result.append(toDataTypeString      (mode));
+                                result.append(separator);
+                                result.append(toRestrictionsString  (mode));
+                                result.append(separator);
+                                result.append(toDocumentationString (mode));
+                                result.append(gtComt(mode));
+                            } // if maxOccurs > 0
+                        } else if (startTagsOnly == 0) { // END_TAG
+                            result.append(toEndElementString    (mode));
+                        }
+                        break;
+                } // switch displayMode
                 break;
         } // switch mode
         if (mode == MODE_HTML) {
-           	result.append("<br />");
+            result.append("<br />");
         } // html
         return result.toString();
     } // toString

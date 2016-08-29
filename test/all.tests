@@ -1,0 +1,29 @@
+#!java -Djdk.net.registerGopherProtocol=true -cp dist/dbat.jar org.teherba.common.RegressionTester
+
+# Collection of Testcases for Xtool
+# @(#) $Id$
+# 2016-08-29, Dr. Georg Fischer
+#-----------------------------------
+#======================================================================
+# normally the main method of class URIReader in the following package is CALLed
+PACKAGE=org.teherba.xtool
+ARGS=
+
+ECHO 000
+#======================================================================
+
+TEST SL1 SchemaList plain camt
+CALL SchemaList -cv -m plain test/camt.052.001.01.xsd
+
+TEST SL2 SchemaList jcl
+CALL SchemaList -cvd -m plain test/jcl.xsd
+
+TEST SL3 SchemaList iso
+CALL SchemaList -f test/iso.pacs.008.001.01.xsd
+
+#================
+TEST XX1 XmlnsXref test.zip
+CALL XmlnsXref -p -z test/test.zip
+
+#================
+
