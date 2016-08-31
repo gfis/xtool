@@ -35,6 +35,7 @@ import  org.teherba.xtool.SchemaList;
 import  org.teherba.xtool.XmlnsPrefix;
 import  org.teherba.xtool.XmlnsXref;
 import  org.teherba.xtool.XPathSelect;
+import  org.teherba.xtool.web.IndexPage;
 import  org.teherba.xtool.web.Messages;
 import  org.teherba.common.web.BasePage;
 import  org.teherba.common.web.MetaInfPage;
@@ -78,7 +79,7 @@ public class XtoolServlet extends HttpServlet {
     /** common code and messages for auxiliary web pages */
     private BasePage basePage;
     /** name of this application */
-    private static final String APP_NAME = "Dbat";
+    private static final String APP_NAME = "Xtool";
     /** Language for user interface */
     private String language = "en";
 
@@ -129,112 +130,129 @@ public class XtoolServlet extends HttpServlet {
      *  @throws IOException
      */
     public void generateResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String view     = BasePage.getInputField(request, "view"  , "index");
         try {
             HttpSession session = request.getSession();
-            String tool         = "SchemaTree";
+            String tool         = "SchemaList";
             String namespace    = "";
             String options      = "";
             String sourceEncoding = "UTF-8";
             String targetEncoding = "UTF-8";
 
-            FileItemFactory fuFactory = new DiskFileItemFactory(); // Create a factory for disk-based file items
-            ServletFileUpload upload = new ServletFileUpload(fuFactory); // Create a new file upload handler
-            List/*<FileItem>*/ items = upload.parseRequest(request); // Parse the request
-            FileItem fileItem[] = new FileItem[2];
-            int ifile = 0;
-            Iterator/*<FileItem>*/ iter = items.iterator();
-            while (iter.hasNext()) { // Process the uploaded items
-                FileItem item = (FileItem) iter.next();
-                if (item.isFormField()) {
-                    String name  = item.getFieldName();
-                    String value = item.getString();
-                    session.setAttribute(name, value);
+            if (view.equals("index")) {
+                // Check that we have a file upload request
+                boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+                if (isMultipart) {
+                    FileItemFactory fuFactory = new DiskFileItemFactory(); // Create a factory for disk-based file items
+                    ServletFileUpload upload = new ServletFileUpload(fuFactory); // Create a new file upload handler
+                    List/*<FileItem>*/ items = upload.parseRequest(request); // Parse the request
+                    FileItem fileItem[] = new FileItem[2];
+                    int ifile = 0;
+                    Iterator/*<FileItem>*/ iter = items.iterator();
+                    while (iter.hasNext()) { // Process the uploaded items
+                        FileItem item = (FileItem) iter.next();
+                        if (item.isFormField()) {
+                            String name  = item.getFieldName();
+                            String value = item.getString();
+                            session.setAttribute(name, value);
+                            if (false) {
+                            } else if (name.equals("tool"   )) {
+                                tool = value;
+                            } else if (name.equals("nsp"    )) {
+                                namespace = value;
+                            } else if (name.equals("opt"    )) {
+                                options = value;
+                            } else { // unknown field name
+                            }
+                        } else {
+                            fileItem[ifile ++] = item;
+                        }
+                    } // while FileItem
+    
                     if (false) {
-                    } else if (name.equals("tool"   )) {
-                        tool = value;
-                    } else if (name.equals("nsp"    )) {
-                        namespace = value;
-                    } else if (name.equals("opt"    )) {
-                        options = value;
-                    } else { // unknown field name
-                    }
-                } else {
-                    fileItem[ifile ++] = item;
+                    } else if (ifile <= 0) { // no file was uploaded
+                        basePage.writeMessage(request, response, language, new String[] { "405" });
+                    } else { // uploaded file
+                        String fileName = fileItem[0].getName();
+                        if (false) {
+        
+                        } else if (tool.equals("SchemaList")) {
+                            SchemaList schemaList = new SchemaList();
+                            schemaList.getOptions(new String[]{"-m", "html"});
+                            schemaList.getOptions(options.split("\\s+"));
+                            String format = schemaList.getMode();
+                            if (false) {
+                            } else if (format.endsWith("tsv")) {
+                                fileName = fileName.replaceAll("\\.xsd", ".txt");
+                                response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
+                                response.setContentType("application/vnd.ms-excel");
+                            } else if (format.endsWith("plain")) {
+                                fileName = fileName.replaceAll("\\.xsd", ".txt");
+                                response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
+                                response.setContentType("text/" + format);
+                            } else {
+                                response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "." + format + "\"");
+                                response.setContentType("text/" + format);
+                            }
+                            schemaList.setFileName(fileName);
+                            schemaList.listSchema(fileItem[0].getInputStream(), response.getOutputStream());
+        
+                        } else if (tool.equals("XmlnsPrefix")) {
+                            XmlnsPrefix xmlnsPrefix = new XmlnsPrefix();
+                            response.setCharacterEncoding(targetEncoding);
+                            response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
+                            response.setContentType("text/xml");
+                            xmlnsPrefix.getOptions(options.split("\\s+"));
+                            xmlnsPrefix.process(fileItem[0].getInputStream(), response.getOutputStream());
+        
+                        } else if (tool.equals("XmlnsXref")) {
+                            XmlnsXref xmlnsXref = new XmlnsXref();
+                            response.setCharacterEncoding(targetEncoding);
+                            response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
+                            response.setContentType("text/html");
+                            if (fileName.endsWith(".zip")) { // imply zip switch
+                                options = "-zip " + options;
+                            } // imply
+                            xmlnsXref.getOptions(0, options.split("\\s+"));
+                            xmlnsXref.setFileName(fileName);
+                            if (xmlnsXref.isZipped >= 1) {
+                                ZipInputStream zis = new ZipInputStream(fileItem[0].getInputStream()); //, "ISO-88519-1");
+                                ZipEntry zentry = null;
+                                while ((zentry = zis.getNextEntry()) != null) {
+                                    xmlnsXref.setFileName(zentry.getName());
+                                    xmlnsXref.analyze(zis);
+                                } // while entries
+                                zis.close();
+                            } else {
+                                xmlnsXref.analyze(fileItem[0].getInputStream());
+                            }
+                            xmlnsXref.setWriter(response.getWriter());
+                            xmlnsXref.serialize();
+        
+                        } else if (tool.equals("XPathSelect")) {
+                            XPathSelect xpathSelect = new XPathSelect();
+                            response.setCharacterEncoding(targetEncoding);
+                            response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
+                            response.setContentType("text/xml");
+                            xpathSelect.getOptions(options.split("\\s+"));
+                            xpathSelect.apply1(fileItem[0].getInputStream(), response.getOutputStream());
+        
+                        } else {
+                            basePage.writeMessage(request, response, language, new String[] { "406", tool });
+                        }
+                    } // uploaded file
+                    // isMultipart
+                } else { // no multipart 
+                    (new IndexPage    ()).dialog(request, response, basePage, language, new String[] { "401" });
                 }
-            } // while FileItem
-
-            if (false) {
-            } else if (ifile <= 0) { // no file was uploaded
-                basePage.writeMessage(request, response, language, new String[] { "405" });
-            } else { // uploaded file
-                String fileName = fileItem[0].getName();
-                if (false) {
-
-                } else if (tool.equals("SchemaList")) {
-                    SchemaList list = new SchemaList();
-                    list.getOptions(new String[]{"-m", "html"});
-                    list.getOptions(options.split("\\s+"));
-                    String format = list.getMode();
-                    if (false) {
-                    } else if (format.endsWith("tsv")) {
-                        fileName = fileName.replaceAll("\\.xsd", ".txt");
-                        response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
-                        response.setContentType("application/vnd.ms-excel");
-                    } else if (format.endsWith("plain")) {
-                        fileName = fileName.replaceAll("\\.xsd", ".txt");
-                        response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
-                        response.setContentType("text/" + format);
-                    } else {
-                        response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "." + format + "\"");
-                        response.setContentType("text/" + format);
-                    }
-                    list.setFileName(fileName);
-                    list.listSchema(fileItem[0].getInputStream(), response.getOutputStream());
-
-                } else if (tool.equals("XmlnsPrefix")) {
-                    response.setCharacterEncoding(targetEncoding);
-                    response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
-                    response.setContentType("text/xml");
-                    XmlnsPrefix prefixer = new XmlnsPrefix();
-                    prefixer.getOptions(options.split("\\s+"));
-                    prefixer.process(fileItem[0].getInputStream(), response.getOutputStream());
-
-                } else if (tool.equals("XmlnsXref")) {
-                    response.setCharacterEncoding(targetEncoding);
-                    response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
-                    response.setContentType("text/html");
-                    if (fileName.endsWith(".zip")) { // imply zip switch
-                        options = "-zip " + options;
-                    } // imply
-                    XmlnsXref xref = new XmlnsXref();
-                    xref.getOptions(0, options.split("\\s+"));
-                    xref.setFileName(fileName);
-                    if (xref.isZipped >= 1) {
-                        ZipInputStream zis = new ZipInputStream(fileItem[0].getInputStream()); //, "ISO-88519-1");
-                        ZipEntry zentry = null;
-                        while ((zentry = zis.getNextEntry()) != null) {
-                            xref.setFileName(zentry.getName());
-                            xref.analyze(zis);
-                        } // while entries
-                        zis.close();
-                    } else {
-                        xref.analyze(fileItem[0].getInputStream());
-                    }
-                    xref.setWriter(response.getWriter());
-                    xref.serialize();
-
-                } else if (tool.equals("XPathSelect")) {
-                    response.setCharacterEncoding(targetEncoding);
-                    response.setHeader("Content-Disposition", "inline; filename=\"" + fileName);
-                    response.setContentType("text/xml");
-                    XPathSelect selector = new XPathSelect();
-                    selector.getOptions(options.split("\\s+"));
-                    selector.apply1(fileItem[0].getInputStream(), response.getOutputStream());
-
-                } else {
-                    basePage.writeMessage(request, response, language, new String[] { "406", tool });
-                }
-            } // uploaded file
+            } else if (view.equals("license")
+                    || view.equals("manifest")
+                    || view.equals("notice")
+                    ) {
+                (new MetaInfPage    ()).showMetaInf (request, response, basePage, language, view);
+            } else {
+                basePage.writeMessage(request, response, language, new String[] { "401", "view", view });
+            }
 
         } catch (Exception exc) {
             log.error(exc.getMessage(), exc);

@@ -62,27 +62,91 @@ public class IndexPage implements Serializable {
             out.write("<title>" + basePage.getAppName() + " Main Page</title>\n");
             out.write("</head>\n<body>\n");
 
-            int width  = 80;
-            int height = 4;
-            String[] optArea    = new String []
-                    { "rset"    // 0
-                    , "cfra"    // 1
-                    , "eecj"    // 2
-                    } ;
-            String[] enArea     = new String []
-                    { "Symbolic Polynomial"         // 0
-                    , "Continued Fraction"          // 1
-                    , "Euler's Extended Conjecture" // 2
-                    } ;
             Object
-            field = session.getAttribute("view"     );  String view  = (field != null) ? (String) field : "upper";
-            field = session.getAttribute("area"     );  String area  = (field != null) ? (String) field : "rset";
-            field = session.getAttribute("opt"      );  String opt   = (field != null) ? (String) field : "norm";
-            field = session.getAttribute("form1"    );  String form1 = (field != null) ? (String) field : "(a-b)^4";
-            field = session.getAttribute("form2"    );  String form2 = (field != null) ? (String) field : "";
-            field = session.getAttribute("form2c"    ); String form2c= (field != null) ? (String) field : "";
-            field = session.getAttribute("varmap"   );
+            field = session.getAttribute("tool"     );  String tool         = (field != null) ? (String) field : "SchemaList";
+            field = session.getAttribute("nsp"      );  String namespace    = (field != null) ? (String) field : "";
+            field = session.getAttribute("opt"      );  String options      = (field != null) ? (String) field : "";
+            field = session.getAttribute("file1"    );  String file1        = (field != null) ? (String) field : "";
+            field = session.getAttribute("file2"    );  String file2        = (field != null) ? (String) field : "";
+            int index = 0;
+            
+            out.write("<!-- tool=\"" + tool + "\", namespace=\"" + namespace + "\", options=\"" + options + " -->\n");
+            out.write("<h2><a href=\"http://www.teherba.org\">teherba.org</a> XML and Schema Tools</h2>\n");
+            out.write("<form action=\"servlet\" method=\"post\" enctype=\"multipart/form-data\">\n");
+            out.write("    <input type = \"hidden\" name=\"view\" value=\"index\" />\n");
+            out.write("    <table cellpadding=\"8\">\n");
+            out.write("        <tr valign=\"top\">\n");
+            out.write("            <td rowspan=\"2\"><strong>Tool</strong><br />\n");
+            out.write("                <select name=\"tool\" size=\"4\">\n");
+            out.write("                    <option value=\"SchemaList\" selected>SchemaList</option>\n");
+            out.write("                    <option value=\"XmlnsPrefix\"        >XmlnsPrefix</option>\n");
+            out.write("                    <option value=\"XmlnsXref\"          >XmlnsXref</option>\n");
+            out.write("                    <option value=\"XPathSelect\"        >XPathSelect</option>\n");
+            out.write("                </select>\n");
+            out.write("            </td>\n");
+            out.write("            <td>\n");
+            out.write("                Options<br />\n");
+            out.write("                <input name=\"opt\"               style=\"font-family: Courier, monospace\"\n");
+            out.write("                        maxsize=\"512\" size=\"64\" value=\"" + options + "\" />\n");
+            out.write("                <br />\n");
+            out.write("                Input File<br />\n");
+            out.write("                <input name=\"file1\" type=\"file\" style=\"font-family: Courier, monospace\"\n");
+            out.write("                        maxsize=\"512\" size=\"64\" value=\"" + file1 + "\"/>\n");
+            out.write("                &nbsp;\n");
+            out.write("                &nbsp;\n");
+            out.write("                <input type=\"submit\" value=\"Submit\" />\n");
+            out.write("            </td>\n");
+            out.write("        </tr>\n");
+            out.write("    </table>\n");
+            out.write("</form>\n");
+            out.write("<p />\n");
+            out.write("<dl>\n");
+            out.write("<dt>SchemaList - List the Element Tree of a W3C XML Schema</dt>\n");
+            out.write("<dd>\n");
+            out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+            out.write("<tr><td>Options:</td></tr>\n");
+            out.write("    <tr><td><tt>-c</tt></td><td>&nbsp;</td><td> show comments with types, restrictions, patterns etc.</td></tr>\n");
+            out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> source file encoding, default: UTF-8</td></tr>\n");
+            out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> target file encoding, default: UTF-8</td></tr>\n");
+            out.write("    <tr><td><tt>-f</tt></td><td>&nbsp;</td><td> show first alternative of choices only</td></tr>\n");
+            out.write("    <tr><td><tt>-m mode</tt></td><td>&nbsp;</td><td> output mode: \"html\" (default), \"plain\", \"tsv\" (for MS-Excel) or \"xml\"\n");
+            out.write("    <tr><td><tt>-s</tt></td><td>&nbsp;</td><td> show start tags only (no end tags)</td></tr>\n");
+            out.write("    <tr><td><tt>-v</tt></td><td>&nbsp;</td><td> generate element values</td></tr>\n");
+            out.write("</table>\n");
+            out.write("<br />\n");
+            out.write("</dd>\n");
+            out.write("<dt>XmlnsPrefix - Modify XML Namespace Prefixes</dt>\n");
+            out.write("<dd>\n");
+            out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+            out.write("<tr><td>Options:</td></tr>\n");
+            out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> source file encoding, default: UTF-8</td></tr>\n");
+            out.write("    <tr><td><tt>-p old1:new1</tt></td><td>&nbsp;</td><td> change prefix \"old1\" to prefix \"new1\" (both may be empty)</td></tr>\n");
+            out.write("    <tr><td><tt>-p old2:new2</tt></td><td>&nbsp;</td><td> ...</td></tr>\n");
+            out.write("</table>\n");
+            out.write("<br />\n");
+            out.write("</dd>\n");
+            out.write("<dt>XmlnsXref - XML Namespace URI and Prefix Crossreference</dt>\n");
+            out.write("<dd>\n");
+            out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+            out.write("<tr><td>Options:</td></tr>\n");
+            out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> source file encoding, default: UTF-8</td></tr>\n");
+            out.write("    <tr><td><tt>-p</tt></td><td>&nbsp;</td><td> show namespace prefixes</td></tr>\n");
+            out.write("    <tr><td><tt>-zip</tt></td><td>&nbsp;</td><td> input file is zip archive</td></tr>\n");
+            out.write("</table>\n");
+            out.write("<br />\n");
+            out.write("</dd>\n");
+            out.write("<dt>XPathSelect - Apply an XPath expression to an XML file</dt>\n");
+            out.write("<dd>\n");
+            out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+            out.write("<tr><td>Options:</td></tr>\n");
+            out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> result file encoding, default: UTF-8</td></tr>\n");
+            out.write("    <tr><td><tt>expr</tt></td><td>&nbsp;</td><td> XPath expression (without functions and variables)</td></tr>\n");
+            out.write("</table>\n");
+            out.write("<br />\n");
+            out.write("</dd>\n");
+            out.write("</dl>\n");
 
+            basePage.writeAuxiliaryLinks(language, "main");
             basePage.writeTrailer(language, "quest");
         } catch (Exception exc) {
             log.error(exc.getMessage(), exc);

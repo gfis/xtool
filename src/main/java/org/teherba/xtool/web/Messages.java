@@ -50,14 +50,17 @@ public class Messages implements Serializable {
         //--------
         basePage.add("en", "001", appLink);
         //--------
-        //--------
         String laux = basePage.LANG_AUX;  // pseudo language code for links to auxiliary information
         int imess   = basePage.START_AUX; // start of messages    for links to auxiliary information
         String
         smess = String.format("%03d", imess ++);
         basePage.add(laux, smess, "<a title=\"main\"        href=\"servlet?view=index\">");
-        basePage.add("en", smess, "{parm}RaMath</a> Main Page");
-        basePage.add("de", smess, "{parm}RaMath</a>-Startseite");
+        basePage.add("en", smess, "{parm}Xtool</a> Main Page");
+        basePage.add("de", smess, "{parm}Xtool</a>-Startseite");
+        smess = String.format("%03d", imess ++);
+        basePage.add(laux, smess, "<a title=\"guide\"       href=\"documentation.html\">");
+        basePage.add("en", smess, "{parm}Xtool</a> User Guide");
+        basePage.add("de", smess, "{parm}Xtool</a>-Dokumentation");
         smess = String.format("%03d", imess ++);
         basePage.add(laux, smess, "<a title=\"wiki\"        href=\"http://www.teherba.org/xtool\" target=\"_new\">");
         basePage.add("en", smess, "{parm}Wiki</a> Documentation");
