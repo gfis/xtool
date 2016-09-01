@@ -1,5 +1,6 @@
 /*  IndexPage.java - main web page for Xtool
  *  @(#) $Id: 57d01d0860aef0c2f2783647be70c3c381710c86 $
+ *  2016-09-01: without session
  *  2016-08-28: Dr. Georg Fischer: copied from Dbat
  */
 /*
@@ -43,33 +44,28 @@ public class IndexPage implements Serializable {
         log      = Logger.getLogger(IndexPage.class.getName());
     } // Constructor
 
-    /** Output the main dialog page for RaMath
+    /** Output the main dialog page for Xtool
      *  @param request request with header fields
      *  @param response response with writer
      *  @param basePage refrence to common methods and error messages
      *  @param language 2-letter code en, de etc.
-     *  @param parms parameters for the message
+     *  @param tool tool to be activated (SchemaList, XmlnsXref ...)
+     *  @param namespace namespace to be used
+     *  @param options options for the tool
      */
     public void dialog(HttpServletRequest request, HttpServletResponse response
             , BasePage basePage
             , String language
-            , String[] parms
+            , String tool
+            , String namespace
+            , String options
             ) {
         try {
+            String file1        = "";
+            String file2        = "";
             PrintWriter out = basePage.writeHeader(request, response, language);
-            HttpSession session = request.getSession();
-
             out.write("<title>" + basePage.getAppName() + " Main Page</title>\n");
             out.write("</head>\n<body>\n");
-
-            Object
-            field = session.getAttribute("tool"     );  String tool         = (field != null) ? (String) field : "SchemaList";
-            field = session.getAttribute("nsp"      );  String namespace    = (field != null) ? (String) field : "";
-            field = session.getAttribute("opt"      );  String options      = (field != null) ? (String) field : "";
-            field = session.getAttribute("file1"    );  String file1        = (field != null) ? (String) field : "";
-            field = session.getAttribute("file2"    );  String file2        = (field != null) ? (String) field : "";
-            int index = 0;
-            
             out.write("<!-- tool=\"" + tool + "\", namespace=\"" + namespace + "\", options=\"" + options + " -->\n");
             out.write("<h2><a href=\"http://www.teherba.org\">teherba.org</a> XML and Schema Tools</h2>\n");
             out.write("<form action=\"servlet\" method=\"post\" enctype=\"multipart/form-data\">\n");
@@ -113,8 +109,7 @@ public class IndexPage implements Serializable {
             out.write("    <tr><td><tt>-s</tt></td><td>&nbsp;</td><td> show start tags only (no end tags)</td></tr>\n");
             out.write("    <tr><td><tt>-v</tt></td><td>&nbsp;</td><td> generate element values</td></tr>\n");
             out.write("</table>\n");
-            out.write("<br />\n");
-            out.write("</dd>\n");
+            out.write("<br /></dd>\n");
             out.write("<dt>XmlnsPrefix - Modify XML Namespace Prefixes</dt>\n");
             out.write("<dd>\n");
             out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
@@ -123,8 +118,7 @@ public class IndexPage implements Serializable {
             out.write("    <tr><td><tt>-p old1:new1</tt></td><td>&nbsp;</td><td> change prefix \"old1\" to prefix \"new1\" (both may be empty)</td></tr>\n");
             out.write("    <tr><td><tt>-p old2:new2</tt></td><td>&nbsp;</td><td> ...</td></tr>\n");
             out.write("</table>\n");
-            out.write("<br />\n");
-            out.write("</dd>\n");
+            out.write("<br /></dd>\n");
             out.write("<dt>XmlnsXref - XML Namespace URI and Prefix Crossreference</dt>\n");
             out.write("<dd>\n");
             out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
@@ -133,8 +127,7 @@ public class IndexPage implements Serializable {
             out.write("    <tr><td><tt>-p</tt></td><td>&nbsp;</td><td> show namespace prefixes</td></tr>\n");
             out.write("    <tr><td><tt>-zip</tt></td><td>&nbsp;</td><td> input file is zip archive</td></tr>\n");
             out.write("</table>\n");
-            out.write("<br />\n");
-            out.write("</dd>\n");
+            out.write("<br /></dd>\n");
             out.write("<dt>XPathSelect - Apply an XPath expression to an XML file</dt>\n");
             out.write("<dd>\n");
             out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
@@ -142,8 +135,7 @@ public class IndexPage implements Serializable {
             out.write("    <tr><td><tt>-e enc</tt></td><td>&nbsp;</td><td> result file encoding, default: UTF-8</td></tr>\n");
             out.write("    <tr><td><tt>expr</tt></td><td>&nbsp;</td><td> XPath expression (without functions and variables)</td></tr>\n");
             out.write("</table>\n");
-            out.write("<br />\n");
-            out.write("</dd>\n");
+            out.write("<br /></dd>\n");
             out.write("</dl>\n");
 
             basePage.writeAuxiliaryLinks(language, "main");

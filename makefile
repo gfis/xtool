@@ -2,15 +2,14 @@
 
 # Test Xtool schema utility programs
 # @(#) $Id: 2bbd9511422674a354fe5a19f2d55437adbebce0 $
-# 2016-08-29: Georg Fischer: copied fro Dbat
-HOME=xtool
-JAVA=java -cp "dist/$(HOME).jar;c:/var/lib/tomcat/openlib"
+# 2016-08-29: Georg Fischer: copied from Dbat
+APPL=xtool
+JAVA=java -cp dist/$(APPL).jar
 DIFF=diff -y --suppress-common-lines --width=160
 DIFF=diff -w -rs -C0
-SRC=src/main/java/org/teherba/xtool
-TOMC=/var/lib/tomcat/webapps/xtool
+SRC=src/main/java/org/teherba/$(APPL)
 TOM=c:/var/lib/tomcat/
-TOMC=$(TOM)/webapps/xtool
+TOMC=$(TOM)/webapps/$(APPL)
 TESTDIR=test
 # the following can be overriden outside for single or subset tests,
 # for example make regression TEST=U%
@@ -21,9 +20,8 @@ SUDO=
 all: regression
 #-------------------------------------------------------------------
 # Perform a regression test 
-# CLASSPATH=dist/xtool.jar;$(TOM)/openlib/log4j-1.2.17.jar;$(TOM)/openlib/commons-fileupload-1.2.2.jar;$(TOM)/openlib/commons-io-2.1.jar
 regression: 
-	java -cp dist/xtool.jar org.teherba.common.RegressionTester $(TESTDIR)/all.tests $(TEST) 2>&1 \
+	java -cp dist/$(APPL).jar org.teherba.common.RegressionTester $(TESTDIR)/all.tests $(TEST) 2>&1 \
 	| tee $(TESTDIR)/regression.log
 	grep FAILED $(TESTDIR)/regression.log
 #
@@ -37,10 +35,6 @@ recr1:
 	grep -E '> FAILED' $(TESTDIR)/regression*.log | cut -f 3 -d ' ' | xargs -l -ißß rm -v test/ßß.prev.tst
 regr2:
 	make regression TEST=$(TEST) > x.tmp
-	
-rset:
-	cmd /c "set java.class.path=$(CLASSPATH) & set java.class.path"
-#--------------------------------------------------
 # test whether all defined tests in common.tests have *.prev.tst results and vice versa
 check_tests:
 	grep -E "^TEST" $(TESTDIR)/all.tests   | cut -b 6-8 | sort | uniq -c > $(TESTDIR)/tests_formal.tmp
@@ -95,8 +89,8 @@ javadoc:
 deploy:
 	ant deploy
 zip:
-	rm -f $(HOME).zip
-	find . | grep -v "test/" | zip -@ $(HOME).zip	
+	rm -f $(APPL).zip
+	find . | grep -v "test/" | zip -@ $(APPL).zip	
 #----------------
 try:
 	`pwd | sed -e "s/\([A-Za-z0-9]*\/\)*\(.*\)/\2/" | tr -d "\n\r"`
@@ -105,9 +99,9 @@ xgrep:
 notmp:
 	find . | grep -E ".bak$$|.tmp$$" | xargs -l rm -vf
 tgz: notmp
-	cd .. ; find $(HOME) -maxdepth 1 -type f 								 > files.tmp
-	cd .. ; find $(HOME) -maxdepth 1 -type d 								>> files.tmp
-	cd .. ; find $(HOME)/src $(HOME)/etc $(HOME)/web $(HOME)/dist -type f 	>> files.tmp
+	cd .. ; find $(APPL) -maxdepth 1 -type f 								 > files.tmp
+	cd .. ; find $(APPL) -maxdepth 1 -type d 								>> files.tmp
+	cd .. ; find $(APPL)/src $(APPL)/etc $(APPL)/web $(APPL)/dist -type f 	>> files.tmp
 	cd .. ; tar --files-from=files.tmp -czvf $(HOME)_`/bin/date +%Y%m%d`.tgz
 ly:
 	lynx -source -mime_header http://localhost:8080/calwork/calendarservlet?variant=de_ev&year=2000&format=sql&dummy=1

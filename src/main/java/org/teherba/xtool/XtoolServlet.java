@@ -1,6 +1,6 @@
 /*  Servlet for several XML utilities: W3C schema as an indented list, XML namespaces and their prefixes
     @(#) $Id: XtoolServlet.java 523 2010-07-26 17:57:50Z gfis $
-    2016-08-29: remove JSPs
+    2016-09-01: remove JSPs and session
     2015-08-06: import java.util.zip.* from jazzlib.sourceforge.net
     2008-02-13: SchemaTree removed
     2007-11-20: with SchemaList - Berlin w/o Deilingeweg 6
@@ -53,7 +53,6 @@ import  javax.servlet.ServletException;
 import  javax.servlet.http.HttpServlet;
 import  javax.servlet.http.HttpServletRequest;
 import  javax.servlet.http.HttpServletResponse;
-import  javax.servlet.http.HttpSession;
 import  org.apache.commons.fileupload.FileItem;
 import  org.apache.commons.fileupload.FileItemFactory;
 import  org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -111,19 +110,6 @@ public class XtoolServlet extends HttpServlet {
         generateResponse(request, response);
     } // doPost
 
-    /** Gets the value of an HTML input field, maybe as empty string
-     *  @param request request for the HTML form
-     *  @param name name of the input field
-     *  @return non-null (but possibly empty) string value of the input field
-     */
-    private String getInputField(HttpServletRequest request, String name) {
-        String value = request.getParameter(name);
-        if (value == null) {
-            value = "";
-        }
-        return value;
-    } // getInputField
-
     /** Creates the response for a HTTP GET or POST request.
      *  @param request fields from the client input form
      *  @param response data to be sent back the user's browser
@@ -132,7 +118,6 @@ public class XtoolServlet extends HttpServlet {
     public void generateResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String view     = BasePage.getInputField(request, "view"  , "index");
         try {
-            HttpSession session = request.getSession();
             String tool         = "SchemaList";
             String namespace    = "";
             String options      = "";
@@ -142,7 +127,12 @@ public class XtoolServlet extends HttpServlet {
             if (view.equals("index")) {
                 // Check that we have a file upload request
                 boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-                if (isMultipart) {
+                if (! isMultipart) {
+                    tool        = basePage.getInputField(request, "tool"    , "SchemaList");
+                    namespace   = basePage.getInputField(request, "nsp"     , "");
+                    options     = basePage.getInputField(request, "opt"     , "");
+                    (new IndexPage    ()).dialog(request, response, basePage, language, tool, namespace, options);
+                } else { // no multipart
                     FileItemFactory fuFactory = new DiskFileItemFactory(); // Create a factory for disk-based file items
                     ServletFileUpload upload = new ServletFileUpload(fuFactory); // Create a new file upload handler
                     List/*<FileItem>*/ items = upload.parseRequest(request); // Parse the request
@@ -154,28 +144,27 @@ public class XtoolServlet extends HttpServlet {
                         if (item.isFormField()) {
                             String name  = item.getFieldName();
                             String value = item.getString();
-                            session.setAttribute(name, value);
                             if (false) {
                             } else if (name.equals("tool"   )) {
-                                tool = value;
+                                tool      = value;
                             } else if (name.equals("nsp"    )) {
                                 namespace = value;
                             } else if (name.equals("opt"    )) {
-                                options = value;
+                                options   = value;
                             } else { // unknown field name
                             }
                         } else {
                             fileItem[ifile ++] = item;
                         }
                     } // while FileItem
-    
+
                     if (false) {
                     } else if (ifile <= 0) { // no file was uploaded
                         basePage.writeMessage(request, response, language, new String[] { "405" });
                     } else { // uploaded file
                         String fileName = fileItem[0].getName();
                         if (false) {
-        
+
                         } else if (tool.equals("SchemaList")) {
                             SchemaList schemaList = new SchemaList();
                             schemaList.getOptions(new String[]{"-m", "html"});
@@ -196,7 +185,7 @@ public class XtoolServlet extends HttpServlet {
                             }
                             schemaList.setFileName(fileName);
                             schemaList.listSchema(fileItem[0].getInputStream(), response.getOutputStream());
-        
+
                         } else if (tool.equals("XmlnsPrefix")) {
                             XmlnsPrefix xmlnsPrefix = new XmlnsPrefix();
                             response.setCharacterEncoding(targetEncoding);
@@ -204,7 +193,7 @@ public class XtoolServlet extends HttpServlet {
                             response.setContentType("text/xml");
                             xmlnsPrefix.getOptions(options.split("\\s+"));
                             xmlnsPrefix.process(fileItem[0].getInputStream(), response.getOutputStream());
-        
+
                         } else if (tool.equals("XmlnsXref")) {
                             XmlnsXref xmlnsXref = new XmlnsXref();
                             response.setCharacterEncoding(targetEncoding);
@@ -228,7 +217,7 @@ public class XtoolServlet extends HttpServlet {
                             }
                             xmlnsXref.setWriter(response.getWriter());
                             xmlnsXref.serialize();
-        
+
                         } else if (tool.equals("XPathSelect")) {
                             XPathSelect xpathSelect = new XPathSelect();
                             response.setCharacterEncoding(targetEncoding);
@@ -236,14 +225,12 @@ public class XtoolServlet extends HttpServlet {
                             response.setContentType("text/xml");
                             xpathSelect.getOptions(options.split("\\s+"));
                             xpathSelect.apply1(fileItem[0].getInputStream(), response.getOutputStream());
-        
+
                         } else {
                             basePage.writeMessage(request, response, language, new String[] { "406", tool });
                         }
                     } // uploaded file
                     // isMultipart
-                } else { // no multipart 
-                    (new IndexPage    ()).dialog(request, response, basePage, language, new String[] { "401" });
                 }
             } else if (view.equals("license")
                     || view.equals("manifest")
