@@ -132,7 +132,7 @@ public class XtoolServlet extends HttpServlet {
                     namespace   = basePage.getInputField(request, "nsp"     , "");
                     options     = basePage.getInputField(request, "opt"     , "");
                     (new IndexPage    ()).dialog(request, response, basePage, language, tool, namespace, options);
-                } else { // no multipart
+                } else { // multipart
                     FileItemFactory fuFactory = new DiskFileItemFactory(); // Create a factory for disk-based file items
                     ServletFileUpload upload = new ServletFileUpload(fuFactory); // Create a new file upload handler
                     List/*<FileItem>*/ items = upload.parseRequest(request); // Parse the request
@@ -236,7 +236,7 @@ public class XtoolServlet extends HttpServlet {
                     || view.equals("manifest")
                     || view.equals("notice")
                     ) {
-                (new MetaInfPage    ()).showMetaInf (request, response, basePage, language, view);
+                (new MetaInfPage    ()).showMetaInf (request, response, basePage, language, view, this);
             } else {
                 basePage.writeMessage(request, response, language, new String[] { "401", "view", view });
             }

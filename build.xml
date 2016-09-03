@@ -2,6 +2,7 @@
 <!--
     ant-buildfile for commandline, web application and web service
     @(#) $Id: build.xml 40 2008-09-08 06:41:22Z gfis $
+    2016-09-02: properties ${tomcat.*}, core.jar
     2016-08-29: tomcat.base|.home
     2008-07-25: new names
     2007-07-09: copied from dbat
@@ -40,6 +41,17 @@
                 out="${src.home}/org/teherba/xtool/SchemaBeanBase.java" 
         />
     </target>                                               
+
+    <target name="core.jar">
+        <!-- without libraries, without web files 
+        <jar jarfile="${dist.home}/${ant.project.name}-core.jar"
+                basedir="${build.classes}"
+                manifest="${build.classes}/META-INF/MANIFEST.MF"
+                excludes="web/** **/web/*.class **/*Servlet.class"
+                >
+        </jar>
+        -->
+    </target>
 
     <target name="test" depends="test.list,test.prefix,test.xref" />
 
