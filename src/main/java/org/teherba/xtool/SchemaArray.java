@@ -1,7 +1,8 @@
 /*  SchemaArray.java - Linear, indented representation of the nodes in the DOM of a W3C Schema (XSD file)
  *  @(#) $Id: SchemaArray.java 523 2010-07-26 17:57:50Z gfis $
- *	2012-02-13: <meta> before <title> was not closed; "all" analoguous to "sequence"
- *	2008-07-25: renamed from Comb
+ *  2016-09-08: generator message
+ *  2012-02-13: <meta> before <title> was not closed; "all" analoguous to "sequence"
+ *  2008-07-25: renamed from Comb
  *  2007-11-09: Georg Fischer
  *
  *  Caution, this file contains HTML and should be encoded in UTF-8: äöüÄÖÜß
@@ -39,7 +40,7 @@ import  org.w3c.dom.Document;
 import  org.w3c.dom.Node;
 import  org.w3c.dom.NodeList;
 import  org.w3c.dom.NamedNodeMap;
-import	org.xml.sax.InputSource;
+import  org.xml.sax.InputSource;
 import  org.apache.log4j.Logger;
 
 /** Linear, indented representation (in the array) of all nodes which are visited
@@ -270,9 +271,9 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     public void insertChildren(int arrayIndex, NodeList children) {
         try {
             SchemaBean mother  = (SchemaBean) get(arrayIndex);
-			if (debug >= 2) {
-				log.debug("insertChildren[" + arrayIndex + "]: " + mother.getNodeName());
-			}
+            if (debug >= 2) {
+                log.debug("insertChildren[" + arrayIndex + "]: " + mother.getNodeName());
+            }
             int ichild = 0;
             while (ichild < children.getLength()) {
                 Node childNode = children.item(ichild ++);
@@ -341,33 +342,33 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
 
             if (typeAttr != null) { // then try to expand the type
                 String typeName = typeAttr.getNodeValue(); // the type's name
-				if (debug >= 2) {
-					log.debug("expandChildrenAndType[" + arrayIndex + "]: " + typeName);
-				}
+                if (debug >= 2) {
+                    log.debug("expandChildrenAndType[" + arrayIndex + "]: " + typeName);
+                }
                 bean.setBaseType(typeName);
                 // remove prefix in any case
                 int colonPos = typeName.indexOf(':');
                 String localType = "";
                 String typePrefix = "";
                 if (colonPos >= 0) {
-                	localType = typeName.substring(colonPos + 1);
-                	typePrefix = typeName.substring(0, colonPos);
+                    localType = typeName.substring(colonPos + 1);
+                    typePrefix = typeName.substring(0, colonPos);
                 } else {
-                	localType = typeName;
+                    localType = typeName;
                 }
                 Object obj = typeMap.get(localType);
                 if (obj != null) { // was stored by collectTypes
                     Node typeNode = (Node) obj;
                     insertChildren(arrayIndex, typeNode.getChildNodes());
                 } else { // was not collected 
-	                String elemPrefix = node.getPrefix();
-	                log.debug("compare " + elemPrefix + " <> " + typePrefix);
-    	            if (elemPrefix == null) { 
-        	        	elemPrefix = "";
-            	    }
-                	if (typePrefix.equals(elemPrefix)) { // in the W3C Schema Namespace
-                		bean.setDataType(localType);
-                	} // W3C type
+                    String elemPrefix = node.getPrefix();
+                    log.debug("compare " + elemPrefix + " <> " + typePrefix);
+                    if (elemPrefix == null) { 
+                        elemPrefix = "";
+                    }
+                    if (typePrefix.equals(elemPrefix)) { // in the W3C Schema Namespace
+                        bean.setDataType(localType);
+                    } // W3C type
                 } // not collected
             } // expand type
         } catch (Exception exc) {
@@ -395,15 +396,15 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
 
     /** Iterates over a list of nodes, expands all children and stores
      *  a linear list of {@link SchemaBean SchemaBeans} which are generated from the
-     *	visited nodes. For attributes and elements, some properties are
-     *	stored directly in the bean, whereas for most other schema language elements,
-     *	the properties are stored in the "anchor element" for which they are defined.
-     *	<p>
-     *	The children of a node are stored directly behind the mother node.
-     *	For element nodes, a "twin" for the end tag is first inserted behind the start tag.
-     *	It is assumed that the first element definition in the schema is the root element
-     *	in the resulting XML instance. All other children of the main "schema" node 
-     *	should be type definitions and are not (directly) walked into.
+     *  visited nodes. For attributes and elements, some properties are
+     *  stored directly in the bean, whereas for most other schema language elements,
+     *  the properties are stored in the "anchor element" for which they are defined.
+     *  <p>
+     *  The children of a node are stored directly behind the mother node.
+     *  For element nodes, a "twin" for the end tag is first inserted behind the start tag.
+     *  It is assumed that the first element definition in the schema is the root element
+     *  in the resulting XML instance. All other children of the main "schema" node 
+     *  should be type definitions and are not (directly) walked into.
      *  @param arrayIndex index of the {@link SchemaBean} to be expanded
      */
     public void expand(int arrayIndex) {
@@ -421,12 +422,12 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                 } else if (bean.getStartEnd() == SchemaBean.START_TAG) {
                     NodeList children = (node != null) ? node.getChildNodes() : null;
                     NamedNodeMap attrs = node.getAttributes();
-			        Node nameAttr = attrs.getNamedItem("name");
+                    Node nameAttr = attrs.getNamedItem("name");
                     Node  refAttr = attrs.getNamedItem("ref" );
                     Node typeAttr = attrs.getNamedItem("type");
                     String elemName = nameAttr == null 
-                    		? (refAttr == null ? "<noref>" : refAttr.getNodeValue())
-                    		: nameAttr.getNodeValue();
+                            ? (refAttr == null ? "<noref>" : refAttr.getNodeValue())
+                            : nameAttr.getNodeValue();
                     if (debug >= 2) {
                         log.debug("START node[" + arrayIndex + "]"
                                 + ", level " + bean.getLevel() + ": " + pathStack.size() + ": "
@@ -475,16 +476,16 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
 
                     } else if (tag.equals("schema"      )) {
                         targetAttr = attrs.getNamedItem("targetNamespace");
-						if (targetAttr != null) {
-                        	targetNamespace = targetAttr.getNodeValue();
+                        if (targetAttr != null) {
+                            targetNamespace = targetAttr.getNodeValue();
                         }
                         insertChildren(arrayIndex, children);
 
                     } else if (tag.equals("attribute"    ) && nameAttr != null) {
                         bean.setDisplayMode(SchemaBean.DISPLAY_ATTRIBUTE);
                         bean.setXPath(anchBean.getXPath() 
-                        		+ SchemaBean.XPATH_SEPARATOR + "@" 
-                        		+ nameAttr.getNodeValue());
+                                + SchemaBean.XPATH_SEPARATOR + "@" 
+                                + nameAttr.getNodeValue());
                         anchBean.putAttribute(nameAttr.getNodeValue(), bean);
                         anchBean = bean;
                         bean.setAnchIndex(arrayIndex); // set children's facets for this bean
@@ -538,35 +539,35 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                         */
                         } // if truncate
                         if ( refAttr != null) { // <xs:element ref="elemName">
-							String refName = refAttr.getNodeValue();
-			                Object refObj = typeMap.get(refName);
-			                if (refObj != null) { // was stored by collectTypes
-			                    node = (Node) refObj;
-                    			children = (node != null) ? node.getChildNodes() : null;
-                    			attrs = node.getAttributes();
-			        			nameAttr = attrs.getNamedItem("name");
-                    			refAttr = attrs.getNamedItem("ref" );
-                    			typeAttr = attrs.getNamedItem("type");
-                    			elemName = nameAttr == null 
-                    					? (refAttr == null ? "<noref>" : refAttr.getNodeValue())
-                    					: nameAttr.getNodeValue();
-	                        	bean.setXPath(anchBean.getXPath() + SchemaBean.XPATH_SEPARATOR + elemName);
-    	                    	anchBean = bean;
-        	                	bean.setAnchIndex(arrayIndex); // set children's facets for this bean
-			                } // was collected 
+                            String refName = refAttr.getNodeValue();
+                            Object refObj = typeMap.get(refName);
+                            if (refObj != null) { // was stored by collectTypes
+                                node = (Node) refObj;
+                                children = (node != null) ? node.getChildNodes() : null;
+                                attrs = node.getAttributes();
+                                nameAttr = attrs.getNamedItem("name");
+                                refAttr = attrs.getNamedItem("ref" );
+                                typeAttr = attrs.getNamedItem("type");
+                                elemName = nameAttr == null 
+                                        ? (refAttr == null ? "<noref>" : refAttr.getNodeValue())
+                                        : nameAttr.getNodeValue();
+                                bean.setXPath(anchBean.getXPath() + SchemaBean.XPATH_SEPARATOR + elemName);
+                                anchBean = bean;
+                                bean.setAnchIndex(arrayIndex); // set children's facets for this bean
+                            } // was collected 
                         }
                         insertTwin(bean, arrayIndex);
                         evalCardinality(arrayIndex, node);
                         String typeName = "";
                         if (typeAttr != null) {
                             typeName = typeAttr.getNodeValue();
-                        	bean.setXPath(anchBean.getXPath() + SchemaBean.XPATH_SEPARATOR + elemName);
-                        	anchBean = bean;
-                        	bean.setAnchIndex(arrayIndex); // set children's facets for this bean
+                            bean.setXPath(anchBean.getXPath() + SchemaBean.XPATH_SEPARATOR + elemName);
+                            anchBean = bean;
+                            bean.setAnchIndex(arrayIndex); // set children's facets for this bean
                         }
                         topElement = new PathElement(typeName, elemName, arrayIndex);
                         if (debug >= 2) {
-                        	log.debug("search[" + arrayIndex + "]: " + typeName + " / " + elemName);
+                            log.debug("search[" + arrayIndex + "]: " + typeName + " / " + elemName);
                         }
                         if (pathStack.search(topElement) <= 0) { // did not find same type and name on the stack
                             // element not yet found on stack
@@ -642,22 +643,22 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     } // expand
 
     /** Loads the schema source file. 
-     *	The source file encoding must have been set previously.
+     *  The source file encoding must have been set previously.
      *  @param stream input stream for the W3C schema file
-     *	@param sourceEncoding encoding of the source schema file
+     *  @param sourceEncoding encoding of the source schema file
      */
     public void loadSchema(InputStream stream, String sourceEncoding) {
         Document document = null;
         try {
-        	InputSource source = new InputSource();
-        	source.setByteStream(stream);
-        	source.setEncoding(sourceEncoding);
+            InputSource source = new InputSource();
+            source.setByteStream(stream);
+            source.setEncoding(sourceEncoding);
             // String   uri = "file:" + new File(xmlFileName).getAbsolutePath();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
             factory.setAttribute
-             		( "http://java.sun.com/xml/jaxp/properties/schemaLanguage"
+                    ( "http://java.sun.com/xml/jaxp/properties/schemaLanguage"
                     , "http://www.w3.org/2001/XMLSchema");
             // factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", new File(xsdFileName)); 
             DocumentBuilder builder = factory.newDocumentBuilder();             
@@ -721,7 +722,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     //-----------------------
 
     /** Gets the current time 
-     *	@return time in ISO timestamp format
+     *  @return time in ISO timestamp format
      */
     private String getCurrentTime() {
         return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")).format(new java.util.Date());
@@ -762,7 +763,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                     );
                 result.append(SchemaBean.emphasize(mode, "mono", xmlPI));
                 result.append("<br />" + nl + SchemaBean.ltComt(mode));
-                result.append(" generated by xtool/SchemaArray (c) 2007 punctum.com at " + getCurrentTime());
+                result.append(" generated by xtool/SchemaList (c) 2014 teherba.org at " + getCurrentTime());
                 // result.append(" (äöüÄÖÜß)");
                 result.append(nl + "<h2>");
                 result.append(fileName);
@@ -770,7 +771,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                 result.append(SchemaBean.gtComt(mode) + "<br />" + nl);
                 break;
             case SchemaBean.MODE_TSV:
-				// Excel 2003 and higher tries to process XML if there is an XML declaration
+                // Excel 2003 and higher tries to process XML if there is an XML declaration
                 break;
             case SchemaBean.MODE_PLAIN:
             case SchemaBean.MODE_XML:
@@ -879,8 +880,8 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                                     result.append(bean.toEndElementString    (mode));
                                 }
                                 if (withComments > 0) { // && bean.getMaxOccurs() > 0) {
-	                                result.append(seps[0]);
-    	                            result.append(bean.toMultiplicityString  (mode));
+                                    result.append(seps[0]);
+                                    result.append(bean.toMultiplicityString  (mode));
                                     result.append(seps[1]);
                                     result.append(bean.toBaseTypeString      (mode));
                                     result.append(seps[2]);

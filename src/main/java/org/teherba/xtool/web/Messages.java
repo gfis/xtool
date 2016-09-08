@@ -62,7 +62,7 @@ public class Messages implements Serializable {
         basePage.add("en", smess, "{parm}Xtool</a> User Guide");
         basePage.add("de", smess, "{parm}Xtool</a>-Dokumentation");
         smess = String.format("%03d", imess ++);
-        basePage.add(laux, smess, "<a title=\"wiki\"        href=\"http://www.teherba.org/xtool\" target=\"_new\">");
+        basePage.add(laux, smess, "<a title=\"wiki\"        href=\"http://www.teherba.org/index.php/Xtool\" target=\"_new\">");
         basePage.add("en", smess, "{parm}Wiki</a> Documentation");
         basePage.add("de", smess, "{parm}Wiki</a>-Dokumentation");
         smess = String.format("%03d", imess ++);

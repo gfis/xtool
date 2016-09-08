@@ -118,9 +118,9 @@ public class XtoolServlet extends HttpServlet {
     public void generateResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String view     = BasePage.getInputField(request, "view"  , "index");
         try {
-            String tool         = "SchemaList";
-            String namespace    = "";
-            String options      = "";
+            String tool           = "SchemaList";
+            String namespace      = "";
+            String options        = "";
             String sourceEncoding = "UTF-8";
             String targetEncoding = "UTF-8";
 
