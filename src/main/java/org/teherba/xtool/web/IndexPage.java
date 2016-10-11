@@ -22,10 +22,8 @@ package org.teherba.xtool.web;
 import  org.teherba.common.web.BasePage;
 import  java.io.PrintWriter;
 import  java.io.Serializable;
-import  java.util.Iterator;
 import  javax.servlet.http.HttpServletRequest;
 import  javax.servlet.http.HttpServletResponse;
-import  javax.servlet.http.HttpSession;
 import  org.apache.log4j.Logger;
 
 /** RaMath main dialog page

@@ -30,7 +30,7 @@
  * limitations under the License.
  */
 
-package org.teherba.xtool;
+package org.teherba.xtool.web;
 import  org.teherba.xtool.SchemaList;
 import  org.teherba.xtool.XmlnsPrefix;
 import  org.teherba.xtool.XmlnsXref;
@@ -40,15 +40,10 @@ import  org.teherba.xtool.web.Messages;
 import  org.teherba.common.web.BasePage;
 import  org.teherba.common.web.MetaInfPage;
 import  java.io.IOException;
-import  java.io.InputStream;
-import  java.util.Enumeration;
 import  java.util.Iterator;
 import  java.util.List;
 import  java.util.zip.ZipEntry;
-import  java.util.zip.ZipFile;
 import  java.util.zip.ZipInputStream;
-import  javax.servlet.ServletConfig;
-import  javax.servlet.ServletContext;
 import  javax.servlet.ServletException;
 import  javax.servlet.http.HttpServlet;
 import  javax.servlet.http.HttpServletRequest;
