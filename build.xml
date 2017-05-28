@@ -32,6 +32,8 @@
     <property name="tomcat.home"        value="/usr/share/tomcat" />
     <import file="build-import.xml" />
 
+    <property name="test"               value="%" />
+
     <target name="generate">
         <xslt in="${etc.home}/spec/Schema.xml" style="../xtrans/web/xslt/genRecord.xsl"
                 out="${src.home}/org/teherba/xtool/SchemaBeanBase.java"
@@ -63,8 +65,21 @@
         </copy>
     </target>
 
+    <target name="regression">
+        <java classname="org.teherba.common.RegressionTester" classpathref="compile.classpath" fork="true">
+            <arg value="test/all.tests" />
+            <arg value="${test}" />
+        </java>
+    </target>
 
     <target name="test" depends="test.list,test.prefix,test.xref" />
+
+    <target name="test.list">  <!-- show the element tree of a W3C schema -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.xtool.SchemaList" />
+            <param name="args"  value="-cvf -m html test/camt.052.001.01.xsd" />
+        </antcall>
+    </target>
 
     <target name="test.xref"><!-- show a namespace crossreference -->
         <antcall target="run">
@@ -77,20 +92,6 @@
         <antcall target="run">
             <param name="class" value="org.teherba.xtool.XmlnsPrefix" />
             <param name="args"  value="-e UTF-8 -e ISO-8859-1 -p pi1:pn1 test/pain.001.001.02.xml" />
-        </antcall>
-    </target>
-
-    <target name="test.list">  <!-- show the element tree of a W3C schema -->
-        <antcall target="run">
-            <param name="class" value="org.teherba.xtool.SchemaList" />
-            <param name="args"  value="-cvf -m html test/camt.052.001.01.xsd" />
-        </antcall>
-    </target>
-
-    <target name="test.tree">  <!-- show the element tree of a W3C schema -->
-        <antcall target="run">
-            <param name="class" value="org.teherba.xtool.SchemaTree" />
-            <param name="args"  value="-t -f -c -v -h test/camt.052.001.01.xsd" />
         </antcall>
     </target>
 

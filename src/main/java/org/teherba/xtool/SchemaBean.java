@@ -1,5 +1,6 @@
 /*  SchemaBean.java - Bean for a start or end of an element in a linear representation of a W3C Schema
  *  @(#) $Id: SchemaBean.java 523 2010-07-26 17:57:50Z gfis $
+    2017-05-28: javadoc 1.8
  *  2012-02-13: .trim() in method 'emphasize'
  *  2008-07-25: renamed from 'ToothBean'
  *  2008-06-17: a lot more W3C datatypes
@@ -51,14 +52,14 @@ public class SchemaBean extends SchemaBeanBase {
     private static Logger log;
 
     /** code for start tag */
-    public static final int START_TAG       = 1;
+    public static final int START_TAG           = 1;
     /** code for end   tag */
-    public static final int END_TAG         = 9;
+    public static final int END_TAG             = 9;
 
     /** tag for start of HTML or XML cell  */
-    public static final String START_CELL   = "<td>";
+    public static final String START_CELL       = "<td>";
     /** tag for end   of HTML or XML cell  */
-    public static final String   END_CELL   = "</td>";
+    public static final String   END_CELL       = "</td>";
 
     /** do not display */
     public static final int DISPLAY_NONE        = 0;
@@ -72,19 +73,19 @@ public class SchemaBean extends SchemaBeanBase {
     public static final int DISPLAY_SIMPLE      = 4;
 
     /** a high value for maxOccurs=unbounded */
-    public static final int UNBOUNDED       = 0x19470629;
+    public static final int UNBOUNDED           = 0x19470629;
     /** string which starts and separates XPath elements */
     public static final String XPATH_SEPARATOR  = "/";
 
     // Caution, the following codes must be kept in parallel with {@link org.teherba.xtool.SchemaList.formats} */
     /** code for HTML output format */
-    public static final int MODE_HTML     = 0;
+    public static final int MODE_HTML           = 0;
     /** code for plain text output format */
-    public static final int MODE_PLAIN    = 1;
+    public static final int MODE_PLAIN          = 1;
     /** code for tab separated values, for Excel / spreadsheet processors */
-    public static final int MODE_TSV      = 2;
+    public static final int MODE_TSV            = 2;
     /** code for XML output format */
-    public static final int MODE_XML      = 3;
+    public static final int MODE_XML            = 3;
 
     /** Initialization of static variables
      */
@@ -150,18 +151,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     //----------------
     /** hashmap for attributes, restrictions etc. */
-    protected HashMap<String, Object> restrictions;
-
-    /** Gets an Object from the hashmap for attributes, restrictions etc.
-     *  @return Object in the hashmap for attributes, restrictions etc.
-     */
-    public Object getRestriction(String key) {
-        Object result = null;
-        if (restrictions != null) {
-            result = restrictions.get(key);
-        } // restrictions != null
-        return result;
-    } // getRestriction
+    private HashMap<String, Object> restrictions;
 
     /** Puts an Object into the hashmap for attributes, restrictions and so on,
      *  creates the hash map if it is not yet allocated.
@@ -225,9 +215,10 @@ public class SchemaBean extends SchemaBeanBase {
     } // getEnumerationSet
 
     /** Gets a value from the hashmap for attributes, restrictions as String
+     *  @param key attribute name of the restriction
      *  @return String in the hashmap for attributes, restrictions etc.
      */
-    public String getStringRestriction(String key) {
+    private String getStringRestriction(String key) {
         String result = null;
         if (restrictions != null) {
             Object obj = restrictions.get(key);
@@ -320,7 +311,7 @@ public class SchemaBean extends SchemaBeanBase {
                 while (part.length() < min) {
                     part += word;
                     // "AAAAAAAAAAAAAAAA".substring(0, min - result.length());
-                }
+                } // while
                 if (part.length() > max) {
                     part = part.substring(0, max);
                 }
@@ -392,83 +383,83 @@ public class SchemaBean extends SchemaBeanBase {
             result.append((String) sortedEnums.first());
         } else if (dataType != null) { // contains a W3C data type
             if (false) {
-            } else if (dataType.startsWith("boolean")) {
+            } else if (dataType.startsWith("boolean"            )) {
                 result.append("true");
-            } else if (dataType.startsWith("decimal")) {
+            } else if (dataType.startsWith("decimal"            )) {
                 result.append("1");
-            } else if (dataType.startsWith("integer")) {
+            } else if (dataType.startsWith("integer"            )) {
                 result.append("1");
-            } else if (dataType.startsWith("int")) {
+            } else if (dataType.startsWith("int"                )) {
                 result.append("1");
-            } else if (dataType.startsWith("short")) {
+            } else if (dataType.startsWith("short"              )) {
                 result.append("1");
-            } else if (dataType.startsWith("byte")) {
+            } else if (dataType.startsWith("byte"               )) {
                 result.append("1");
-            } else if (dataType.startsWith("long")) {
+            } else if (dataType.startsWith("long"               )) {
                 result.append("1");
-            } else if (dataType.startsWith("nonPositiveInteger")) {
+            } else if (dataType.startsWith("nonPositiveInteger" )) {
                 result.append("-1");
-            } else if (dataType.startsWith("nonNegativeInteger")) {
+            } else if (dataType.startsWith("nonNegativeInteger" )) {
                 result.append("1");
-            } else if (dataType.startsWith("positiveInteger")) {
+            } else if (dataType.startsWith("positiveInteger"    )) {
                 result.append("1");
-            } else if (dataType.startsWith("unsignedLong")) {
+            } else if (dataType.startsWith("unsignedLong"       )) {
                 result.append("1");
-            } else if (dataType.startsWith("unsignedInt")) {
+            } else if (dataType.startsWith("unsignedInt"        )) {
                 result.append("1");
-            } else if (dataType.startsWith("unsignedShort")) {
+            } else if (dataType.startsWith("unsignedShort"      )) {
                 result.append("1");
-            } else if (dataType.startsWith("unsignedByte")) {
+            } else if (dataType.startsWith("unsignedByte"       )) {
                 result.append("1");
-            } else if (dataType.startsWith("negativeInteger")) {
+            } else if (dataType.startsWith("negativeInteger"    )) {
                 result.append("-1");
-            } else if (dataType.startsWith("dateTime")) {
+            } else if (dataType.startsWith("dateTime"           )) {
                 result.append("2007-06-29T04:30:00Z");
-            } else if (dataType.startsWith("date")) {
+            } else if (dataType.startsWith("date"               )) {
                 result.append("2007-06-29");
-            } else if (dataType.startsWith("float")) {
+            } else if (dataType.startsWith("float"              )) {
                 result.append("-1.85E2");
-            } else if (dataType.startsWith("double")) {
+            } else if (dataType.startsWith("double"             )) {
                 result.append("2.99E8"); // speed of light: m/s?
-            } else if (dataType.startsWith("duration")) {
+            } else if (dataType.startsWith("duration"           )) {
                 result.append("P60Y11M18D"); // my age today
-            } else if (dataType.startsWith("time")) {
+            } else if (dataType.startsWith("time"               )) {
                 result.append("04:30:00Z");
-            } else if (dataType.startsWith("gYearMonth")) {
+            } else if (dataType.startsWith("gYearMonth"         )) {
                 result.append("1947-06");
-            } else if (dataType.startsWith("gYear")) {
+            } else if (dataType.startsWith("gYear"              )) {
                 result.append("1947");
-            } else if (dataType.startsWith("gMonthDay")) {
+            } else if (dataType.startsWith("gMonthDay"          )) {
                 result.append("06-29");
-            } else if (dataType.startsWith("gMonth")) {
+            } else if (dataType.startsWith("gMonth"             )) {
                 result.append("06");
-            } else if (dataType.startsWith("gDay")) {
+            } else if (dataType.startsWith("gDay"               )) {
                 result.append("29");
-            } else if (dataType.startsWith("hexBinary")) {
+            } else if (dataType.startsWith("hexBinary"          )) {
                 result.append("1D"); // = decimal 29
-            } else if (dataType.startsWith("base64Binary")) {
+            } else if (dataType.startsWith("base64Binary"       )) {
                 result.append("2906"); // = 4 * 2**6 = 3 * 2**8, 3 bytes
-            } else if (dataType.startsWith("anyURI")) {
+            } else if (dataType.startsWith("anyURI"             )) {
                 result.append("urn:iso:std:iso:20022");
-            } else if (dataType.startsWith("NCName")) {
+            } else if (dataType.startsWith("NCName"             )) {
                 result.append("NCName");
-            } else if (dataType.startsWith("normalizedString")) {
+            } else if (dataType.startsWith("normalizedString"   )) {
                 result.append("normalizedString");
-            } else if (dataType.startsWith("string")) {
+            } else if (dataType.startsWith("string"             )) {
                 String baseType = getBaseType();
                 String pattern  = getStringRestriction("pattern");
                 if (false) {
                 } else if (pattern != null) { // has a pattern
                     if (false) {
-                    } else if (baseType.startsWith("CurrencyCode")) {
+                    } else if (baseType.startsWith("CurrencyCode"               )) {
                         result.append("EUR");
-                    } else if (baseType.startsWith("IBANIdentifier")) {
+                    } else if (baseType.startsWith("IBANIdentifier"             )) {
                         result.append("DE28500400000123456589");
-                    } else if (baseType.startsWith("BICIdentifier")) {
+                    } else if (baseType.startsWith("BICIdentifier"              )) {
                         result.append("COBADEFF");
-                    } else if (baseType.startsWith("BEIIdentifier")) {
+                    } else if (baseType.startsWith("BEIIdentifier"              )) {
                         result.append("BEIADEFF");
-                    } else if (baseType.startsWith("CHIPSUniversalIdentifier")) {
+                    } else if (baseType.startsWith("CHIPSUniversalIdentifier"   )) {
                         result.append("CH012345");
                     } else {
                         result.append(getValueFromPattern(pattern));
@@ -502,7 +493,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents a "less than" character in the output format
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @return either "&lt;" or "<"
+     *  @return either "&amp;lt;" or "&lt;"
      */
     public static String lt(int mode) {
         String result = "<";
@@ -521,7 +512,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents a "greater than" character in the output format
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @return either "&gt;" or ">"
+     *  @return either "&amp;gt;" or "&gt;"
      */
     public static String gt(int mode) {
         String result = ">";
@@ -540,7 +531,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents an opening comment mark
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @return either "&lt;!--" or "<!--"
+     *  @return either "&amp;lt;!--" or "&lt;!--"
      */
     public static String ltComt(int mode) {
         String result = "<!--";
@@ -561,7 +552,7 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Represents a closing comment mark
      *  @param mode output format: HTML, plain text, tab separated values, XML
-     *  @return either "--&gt;" or "-->"
+     *  @return either "--&amp;gt;" or "--&gt;"
      */
     public static String gtComt(int mode) {
         String result = "-->";
@@ -585,6 +576,7 @@ public class SchemaBean extends SchemaBeanBase {
      *  @param css CSS class designator for emphasis;
      *  the styles for the classes are defined in the HTML header in {@link SchemaArray#toHeaderString}
      *  @param text text to be emphasized
+     *  @return emphasized string
      */
     public static String emphasize(int mode, String css, String text) {
         return (mode == MODE_HTML)
@@ -759,7 +751,7 @@ public class SchemaBean extends SchemaBeanBase {
      *  @param mode output format: HTML, plain text, tab separated values, XML
      *  @return a string representing minOccurs and maxOccurs
      */
-    public String toCardinalityString(int mode) {
+    private String toCardinalityString_99(int mode) {
         String result = "";
         if (false) {
         } else if (minOccurs == 0) {
@@ -772,7 +764,7 @@ public class SchemaBean extends SchemaBeanBase {
                 result = "*";
             } else {
                 result = "{" + minOccurs + "," + maxOccurs + "}";
-            } // if maxOccurs
+            } // if minOccurs == 0
         } else if (minOccurs == 1) {
             if (false) {
             } else if (maxOccurs == 0) {
@@ -783,7 +775,7 @@ public class SchemaBean extends SchemaBeanBase {
                 result = "+";
             } else {
                 result = "{" + minOccurs + "," + maxOccurs + "}";
-            } // if maxOccurs
+            } // if minOccurs == 1
         } else if (minOccurs == UNBOUNDED) {
             log.warn("minOccurs=\"unbounded\" - strange?"); // should not occur
         } else {
@@ -853,7 +845,7 @@ public class SchemaBean extends SchemaBeanBase {
      *  @param mode output format: HTML, plain text, tab separated values, XML
      *  @return a string with all concatenated attributes, separated by space.
      */
-    public String toAttributesString(int mode) {
+    private String toAttributesString(int mode) {
         StringBuffer result = new StringBuffer(16);
         if (restrictions != null)
         try {
@@ -889,7 +881,7 @@ public class SchemaBean extends SchemaBeanBase {
      *  @param mode output format: HTML, plain text, tab separated values, XML
      *  @return a string with all concatenated enumerations, delimited by "|"
      */
-    public String toEnumerationsString(int mode) {
+    private String toEnumerationsString(int mode) {
         StringBuffer result = new StringBuffer(16);
         if (restrictions != null)
         try {
@@ -930,70 +922,54 @@ public class SchemaBean extends SchemaBeanBase {
      */
     public String toRestrictionsString(int mode) {
         StringBuffer result = new StringBuffer(16);
-        /* in array, the following facets are currently stored:
-                            || tag.equals("fractionDigits")
-                            || tag.equals("minExclusive")
-                            || tag.equals("maxExclusive")
-                            || tag.equals("minInclusive")
-                            || tag.equals("maxInclusive")
-                            || tag.equals("minLength"   )
-                            || tag.equals("maxLength"   )
-                            || tag.equals("pattern"     )
-                            || tag.equals("totalDigits" )
-        */
         if (restrictions != null)
         try {
             String restr = null;
-            restr = getStringRestriction("minLength");
+            restr = getStringRestriction("minLength"        );
             if (restr != null) {
                 result.append(" ");
                 result.append(restr);
             }
-            restr = getStringRestriction("maxLength");
+            restr = getStringRestriction("maxLength"        );
             if (restr != null) {
                 result.append("..");
                 result.append(restr);
             }
-
-            restr = getStringRestriction("minInclusive");
+            restr = getStringRestriction("minInclusive"     );
             if (restr != null) {
                 result.append(" " + gt(mode) + "=");
                 result.append(restr);
             }
-            restr = getStringRestriction("minExclusive");
+            restr = getStringRestriction("minExclusive"     );
             if (restr != null) {
                 result.append(" " + gt(mode));
                 result.append(restr);
             }
-            restr = getStringRestriction("maxInclusive");
+            restr = getStringRestriction("maxInclusive"     );
             if (restr != null) {
                 result.append("," + lt(mode) + "=");
                 result.append(restr);
             }
-            restr = getStringRestriction("maxExclusive");
+            restr = getStringRestriction("maxExclusive"     );
             if (restr != null) {
                 result.append("," + lt(mode));
                 result.append(restr);
             }
-
-            restr = getStringRestriction("pattern");
+            restr = getStringRestriction("pattern"          );
             if (restr != null) {
                 result.append(" /" + restr + "/");
             }
-
-            restr = getStringRestriction("totalDigits");
+            restr = getStringRestriction("totalDigits"      );
             if (restr != null) {
                 result.append(" L");
                 result.append(restr);
             }
-            restr = getStringRestriction("fractionDigits");
+            restr = getStringRestriction("fractionDigits"   );
             if (restr != null) {
                 result.append(".");
                 result.append(restr);
             }
-
             result.append(toEnumerationsString(mode));
-
         } catch (Exception exc) {
             log.error("toRestrictionsString " + exc.getMessage(), exc);
         }
@@ -1017,16 +993,16 @@ public class SchemaBean extends SchemaBeanBase {
         StringBuffer result = new StringBuffer(16);
         if (restrictions != null)
         try {
-            Object obj = null;
-            obj = getStringRestriction("appInfo");
-            if (obj != null) {
+            String restr = null;
+            restr = getStringRestriction("appInfo");
+            if (restr != null) {
                 result.append(" ! ");
-                result.append(emphasize(mode, "doct", (String) obj));
+                result.append(emphasize(mode, "doct", restr));
             }
-            obj = getStringRestriction("documentation");
-            if (obj != null) {
+            restr = getStringRestriction("documentation");
+            if (restr != null) {
                 result.append(" ! ");
-                result.append(emphasize(mode, "doct", (String) obj));
+                result.append(emphasize(mode, "doct", restr));
             }
         } catch (Exception exc) {
             log.error("toDocumentationString " + exc.getMessage(), exc);

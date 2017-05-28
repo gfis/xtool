@@ -4,7 +4,7 @@
     2008-07-25: new names
     2007-11-23: copied from SchemaTree, totally restructured
     2007-07-23, Georg Fischer
-    
+
     Caution, this file must be stored in UTF-8: äöüÄÖÜß
 */
 /*
@@ -33,14 +33,14 @@ import  java.io.OutputStream;
 import  java.io.PrintStream;
 import  org.apache.log4j.Logger;
 
-/** Shows a W3C XML schema as a tree of elements; 
- *  reads a schema (.xsd) file and prints the element nodes 
+/** Shows a W3C XML schema as a tree of elements;
+ *  reads a schema (.xsd) file and prints the element nodes
  *  with their types, multiplicity, enumerations, patterns, annotations and other attributes
  *  in a linear, indented representation (a {@link SchemaArray} with {@link SchemaBean}s).
  *
  *  @author Dr. Georg Fischer
  */
-public class SchemaList { 
+public class SchemaList {
     public final static String CVSID = "@(#) $Id: SchemaList.java 523 2010-07-26 17:57:50Z gfis $";
     //                                  01234567890123456789012345678901234567890123
     //                                            1         2         3         4
@@ -54,17 +54,17 @@ public class SchemaList {
     /** newline character(s) */
     private String nl;
 
-	// bean properties
+    // bean properties
     /** whether to generate comments for annotations and documentation */
     private int withAnnotations;
-    /** whether to show the first choice only (1) 
-	 *	or all possible choices (0) with a pseudo element "unresolvedChoice" 
-	 */
+    /** whether to show the first choice only (1)
+     *  or all possible choices (0) with a pseudo element "unresolvedChoice"
+     */
     private int firstChoice;
     /** output format code: HTML, XML, tsv, plain text */
     private int mode;
     /** Defines whether only start tags should be shown */
-	private int startTagsOnly;
+    private int startTagsOnly;
     /** whether to generate comments for types, restrictions, patterns etc. */
     private int withComments;
     /** whether to show types (default 0 = no) */
@@ -82,7 +82,7 @@ public class SchemaList {
 
     /** Linear list of elements from the schema */
     private SchemaArray schemaArray;
-            
+
     /** No-args constructor
      */
     public SchemaList() {
@@ -94,65 +94,65 @@ public class SchemaList {
         startTagsOnly   = 0;
         withComments    = 0;
         withValues      = 0;
-		sourceEncoding  = "UTF-8";
-		resultEncoding  = sourceEncoding;
-		encNo = 0; // no encoding option specified so far
+        sourceEncoding  = "UTF-8";
+        resultEncoding  = sourceEncoding;
+        encNo = 0; // no encoding option specified so far
     } // constructor
 
     /** Display help: print English help text for commandline options and arguments
      */
     private void usage() {
-    	System.err.println("usage:\tjava -cp dist/xtool.jar org.teherba.xtool.SchemaList"
-    				 + " [-c] [-d] [-e enc [-e enc]] [-f] [-m mode] [-v] \\" 
-     			+ nl + "\t\t\tschemaFile [outputfile]"
-     			+ nl + "-c 		with comments"
-     			+ nl + "-d		debugging trace"
-     			+ nl + "-e enc	source or result file encoding: UTF-8, ISO-8859-1 etc."
-     			+ nl + "-f		take first alternative of choice constructions"
-     			+ nl + "-m mode output mode: html, plain, tsv or xml"
-     			+ nl + "-v		generate and show values"
-				+ nl);
+        System.err.println("usage:\tjava -cp dist/xtool.jar org.teherba.xtool.SchemaList"
+                     + " [-c] [-d] [-e enc [-e enc]] [-f] [-m mode] [-v] \\"
+                + nl + "\t\t\tschemaFile [outputfile]"
+                + nl + "-c      with comments"
+                + nl + "-d      debugging trace"
+                + nl + "-e enc  source or result file encoding: UTF-8, ISO-8859-1 etc."
+                + nl + "-f      take first alternative of choice constructions"
+                + nl + "-m mode output mode: html, plain, tsv or xml"
+                + nl + "-v      generate and show values"
+                + nl);
     } // usage
-    
+
     /** Sets the name of the XML file which was analyzed
      *  @param fileName name of the input file
      */
     public void setFileName(String fileName) {
         xmlFileName = fileName;
     } // setFileName
-    
+
     /** Gets the name of the XML file which was analyzed
      *  @return fileName name of the input file
      */
     public String getFileName() {
         return xmlFileName;
     } // getFileName
-    
+
     /** External formatting codes (keep them in synch with MODE_* enumeration in {@link SchemaBean}) */
     private String[] formats = new String[] {"html", "plain", "tsv", "xml"};
-    
+
     /** Sets the output mode
      *  @param format external denotation for HTML, plain text, tab separated or XML output format
      */
     public void setMode(String format) {
         mode = format.indexOf(format);
         if (mode < 0) { // not found
-        	mode = SchemaBean.MODE_PLAIN;
+            mode = SchemaBean.MODE_PLAIN;
         } // not found
     } // setMode
-    
+
     /** Gets the output mode
      *  @return mode code for HTML, plain text, tab separated or XML
      */
     public String getMode() {
         return formats[mode];
     } // getMode
-    
-    /** whether first xs:element is not yet processed */ 
+
+    /** whether first xs:element is not yet processed */
     private boolean globalBusy;
-    
+
     /** Evaluates the commandline arguments and remembers them
-     *  @param args commandline arguments: options with leading dashes 
+     *  @param args commandline arguments: options with leading dashes
      *  and optional trailing filenames without a dash
      *  @return the index of the first argument whithout leading '-'
      */
@@ -168,13 +168,13 @@ public class SchemaList {
                     debug = 2;
                 } // -d
                 if (option.indexOf("e") >= 0 && iargs < args.length) {
-                	encNo ++;
-                	if (encNo == 1) {
-                    	sourceEncoding = args[iargs ++];
-                    	resultEncoding = sourceEncoding;
+                    encNo ++;
+                    if (encNo == 1) {
+                        sourceEncoding = args[iargs ++];
+                        resultEncoding = sourceEncoding;
                     } else {
-                    	resultEncoding = args[iargs ++];
-					}                    	
+                        resultEncoding = args[iargs ++];
+                    }
                 } // -e
                 if (option.indexOf("f") >= 0) {
                     firstChoice = 1;
@@ -192,7 +192,7 @@ public class SchemaList {
                         mode = SchemaBean.MODE_XML;
                     } else {
                         log.error("unknown format " + format);
-                    }                       
+                    }
                 } // -m
                 if (option.indexOf("s") >= 0) {
                     startTagsOnly = 1;
@@ -206,7 +206,7 @@ public class SchemaList {
         } // try
         return iargs;
     } // getOptions
-        
+
     /** Walks through the defined possible element structure and
      *  displays an indented list of element tags (a "SchemaArray" with one "SchemaBean" per line),
      *  together with the features specified for the element.
@@ -223,8 +223,8 @@ public class SchemaList {
             schemaArray.setWithComments    (withComments);
             schemaArray.setWithValues      (withValues);
             PrintStream printer = new PrintStream(outStream, true, resultEncoding);
-            schemaArray.setPrintStream	   (printer, resultEncoding); // options must have been set before
-            
+            schemaArray.setPrintStream     (printer, resultEncoding); // options must have been set before
+
             schemaArray.loadSchema(inStream, sourceEncoding);
             schemaArray.simplify();
             schemaArray.print(getFileName(), resultEncoding);
@@ -232,7 +232,7 @@ public class SchemaList {
             log.error(exc.getMessage(), exc);
         } // try
     } // listSchema
-        
+
     /*=======================*/
     /* Main method           */
     /*=======================*/
@@ -240,13 +240,13 @@ public class SchemaList {
      *  @param args Arguments; if missing, print the following:
      *  <pre>
      *  usage:\tjava -cp dist/xtool.jar org.teherba.xtool.SchemaList [-c] [-d] [-e enc] [-f] [-m mode] [-v] \\
-     		schemaFile [outputfile]
-     	-c 		with comments
-     	-d		debugging trace
-     	-e enc	source encoding: UTF-8, ISO-8859-1 etc.
-     	-f		take first alternative of choice constructions
-     	-m mode output mode: html, plain, tsv or xml
-     	-v		generate and show values
+            schemaFile [outputfile]
+        -c      with comments
+        -d      debugging trace
+        -e enc  source encoding: UTF-8, ISO-8859-1 etc.
+        -f      take first alternative of choice constructions
+        -m mode output mode: html, plain, tsv or xml
+        -v      generate and show values
      *  </pre>
      */
     public static void main(String args[]) {
@@ -254,16 +254,16 @@ public class SchemaList {
         try {
             int ifile = list.getOptions(args);
             if (ifile < args.length) { // sufficient arguments, at least 1 filename
-	            String fileName = args[ifile ++];
-	            list.setFileName(fileName);
-	            OutputStream out = System.out;
-	            if (ifile < args.length) {
-	                out = new FileOutputStream(args[ifile ++]);
-	            }
-	            list.listSchema(new FileInputStream(fileName), out);
-        	} else { // not any filename
-        		list.usage();
-        	}
+                String fileName = args[ifile ++];
+                list.setFileName(fileName);
+                OutputStream out = System.out;
+                if (ifile < args.length) {
+                    out = new FileOutputStream(args[ifile ++]);
+                }
+                list.listSchema(new FileInputStream(fileName), out);
+            } else { // not any filename
+                list.usage();
+            }
         } catch (Exception exc) {
             list.log.error(exc.getMessage(), exc);
         } // try

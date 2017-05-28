@@ -12,14 +12,18 @@ ARGS=
 ECHO 000
 #======================================================================
 
-TEST SL1 SchemaList plain camt
+TEST SL1 SchemaList plain camt.052
 CALL SchemaList -cv -m plain test/camt.052.001.01.xsd
 
 TEST SL2 SchemaList jcl
 CALL SchemaList -cvd -m plain test/jcl.xsd
 
-TEST SL3 SchemaList iso
+TEST SL3 SchemaList pacs.008
 CALL SchemaList -f test/iso.pacs.008.001.01.xsd
+
+#================
+TEST XP1 XmlnsPrefix test.zip
+CALL XmlnsPrefix -e UTF-8 -e ISO-8859-1 -p pi1:pn1 test/pain.001.001.02.xml
 
 #================
 TEST XX1 XmlnsXref test.zip

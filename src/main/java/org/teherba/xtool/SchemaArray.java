@@ -1,11 +1,11 @@
 /*  SchemaArray.java - Linear, indented representation of the nodes in the DOM of a W3C Schema (XSD file)
+ *  Caution, this file contains HTML and should be encoded in UTF-8: äöüÄÖÜß
  *  @(#) $Id: SchemaArray.java 523 2010-07-26 17:57:50Z gfis $
+ *  2017-05-28: remove unchecked casts
  *  2016-09-08: generator message
  *  2012-02-13: <meta> before <title> was not closed; "all" analoguous to "sequence"
  *  2008-07-25: renamed from Comb
  *  2007-11-09: Georg Fischer
- *
- *  Caution, this file contains HTML and should be encoded in UTF-8: äöüÄÖÜß
  */
 /*
  * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
@@ -55,7 +55,7 @@ import  org.apache.log4j.Logger;
  *
  *  @author Dr. Georg Fischer
  */
-public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
+public class SchemaArray extends ArrayList<SchemaBean> {
     /** Source code version */
     public static final String CVSID = "@(#) $Id: SchemaArray.java 523 2010-07-26 17:57:50Z gfis $";
 
@@ -84,7 +84,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     private int withValues;
 
     /** Maps simple|complexType names to the element node which defines them */
-    private TreeMap/*<1.5*/<String, Node>/*1.5>*/ typeMap;
+    private TreeMap<String, Node> typeMap;
     /** Stack of nested elements for avoiding recursive (cyclic) tree walking */
     private PathStack pathStack;
     /** target namespace or null if not yet known or already output */
@@ -98,11 +98,11 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
         super(4096);
         log = Logger.getLogger(SchemaArray.class.getName());
         nl = System.getProperty("line.separator");
-        typeMap     = new TreeMap/*<1.5*/<String, Node>/*1.5>*/();
-        pathStack   = new PathStack();
-        targetNamespace = null;
-        firstElement    = true;
-        anchBean       = null;
+        typeMap           = new TreeMap<String, Node>();
+        pathStack         = new PathStack();
+        targetNamespace   = null;
+        firstElement      = true;
+        anchBean          = null;
         setDebug            (1);
         setSortChildren     (1);
         setChoiceResolution (0);
@@ -122,7 +122,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     /** Sets the way how children of choices are sorted.
      *  @param sort either do not sort (0) or sort (1) children of choices
      */
-    public void setSortChildren(int sort) {
+    private void setSortChildren(int sort) {
         sortChildren = sort;
     } // setSortChildren
 
@@ -138,9 +138,9 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  This method is needed to set the anchestor for the root element.
      *  @param bean bean to be set
      */
-    public void setanchBean(SchemaBean bean) {
+    private void setAnchestorBean(SchemaBean bean) {
         anchBean = bean;
-    } // setanchBean
+    } // setAnchestorBean
 
     /** Sets the output format
      *  @param format code for the output format, corresponding to the value of commandline option "-m"
@@ -173,7 +173,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
     /** Runs through all top level nodes of the document and collects the types
      *  @param node (root) node to be traversed
      */
-    public void collectTypes(Node node) {
+    private void collectTypes(Node node) {
         try {
             NodeList nodes = node.getChildNodes();
             int ichild = 0;
@@ -202,7 +202,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param arrayIndex position of the list element to be described
      *  @param node node which has the cardinality attributes
      */
-    public void evalCardinality(int arrayIndex, Node node) {
+    private void evalCardinality(int arrayIndex, Node node) {
         try {
             SchemaBean bean = (SchemaBean) get(arrayIndex); // the element of the list to be described
             NamedNodeMap attrs = node.getAttributes();
@@ -244,7 +244,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param arrayIndex position of the list element to be described
      *  @param node node which has the "use=" attribute
      */
-    public void evalUse(int arrayIndex, Node node) {
+    private void evalUse(int arrayIndex, Node node) {
         try {
             SchemaBean bean = (SchemaBean) get(arrayIndex); // the element of the list to be described
             NamedNodeMap attrs = node.getAttributes();
@@ -269,7 +269,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param arrayIndex index where to insert in the list
      *  @param children children which should be inserted
      */
-    public void insertChildren(int arrayIndex, NodeList children) {
+    private void insertChildren(int arrayIndex, NodeList children) {
         try {
             SchemaBean mother  = (SchemaBean) get(arrayIndex);
             if (debug >= 2) {
@@ -294,7 +294,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param children list of all children
      *  @param all whether to insert all element children, or only the first
      */
-    public void insertChildren(int arrayIndex, NodeList children, boolean all) {
+    private void insertChildren(int arrayIndex, NodeList children, boolean all) {
         try {
             SchemaBean mother  = (SchemaBean) get(arrayIndex);
             int ichild = 0;
@@ -322,7 +322,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  the element order remains unchanged
      *  @param key attribute whose value is used as sort key
      */
-    public void insertSortedChildren(int arrayIndex, NodeList children, String element, String key) {
+    private void insertSortedChildren(int arrayIndex, NodeList children, String element, String key) {
         // sorting not yet implemented
         insertChildren(arrayIndex, children);
     } // insertSortedChildren
@@ -333,7 +333,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param children node list of children of the current node
      *  @param typeAttr an attribute node containing the reference to a complex or simple type
      */
-    public void expandChildrenAndType(int arrayIndex, NodeList children, Node typeAttr) {
+    private void expandChildrenAndType(int arrayIndex, NodeList children, Node typeAttr) {
         try {
             SchemaBean bean = (SchemaBean) get(arrayIndex); // the element of the list to be processed
             Node node = bean.getNode();
@@ -382,9 +382,9 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  @param bean which should be cloned
      *  @param arrayIndex insert the twin behind this position in the list
      */
-    public void insertTwin(SchemaBean bean, int arrayIndex) {
+    private void insertTwin(SchemaBean bean, int arrayIndex) {
         try {
-            SchemaBean twin = new SchemaBean(bean.getNode(), bean);
+            SchemaBean twin   = new SchemaBean(bean.getNode(), bean);
             twin.setNodeName    (bean.getNodeName());
             twin.setStartEnd    (SchemaBean.END_TAG);
             twin.setDisplayMode (bean.getDisplayMode());
@@ -408,7 +408,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
      *  should be type definitions and are not (directly) walked into.
      *  @param arrayIndex index of the {@link SchemaBean} to be expanded
      */
-    public void expand(int arrayIndex) {
+    private void expand(int arrayIndex) {
         String tag = null; // schema, element, attribute, choice etc.
         Node targetAttr = null; // node of the targetNamespace="" attribute of the <schema> element
         PathElement topElement = null; // leads to the top bean on the stack
@@ -438,51 +438,52 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
 
                     // below all relevant elements are tested
                     if (false) {
-                    } else if (tag.equals("annotation"   )
-                            || tag.equals("complexType"  )
-                            || tag.equals("all"          ) // similiar to "sequence"
-                            || tag.equals("sequence"     )
-                            || tag.equals("simpleContent")
-                            || tag.equals("simpleType"   )
+                    } else if (tag.equals("annotation"   	)
+                            || tag.equals("complexType"  	)
+                            || tag.equals("all"          	) // similiar to "sequence"
+                            || tag.equals("sequence"     	)
+                            || tag.equals("simpleContent"	)
+                            || tag.equals("simpleType"   	)
                             ) { // simply walk into subtree
                         insertChildren(arrayIndex, children);
 
                     } else if (false
-                            || tag.equals("fractionDigits")
-                            || tag.equals("minExclusive")
-                            || tag.equals("maxExclusive")
-                            || tag.equals("minInclusive")
-                            || tag.equals("maxInclusive")
-                            || tag.equals("minLength"   )
-                            || tag.equals("maxLength"   )
-                            || tag.equals("pattern"     )
-                            || tag.equals("totalDigits" )
+                            || tag.equals("fractionDigits"	)
+                            || tag.equals("minExclusive"	)
+                            || tag.equals("maxExclusive"	)
+                            || tag.equals("minInclusive"	)
+                            || tag.equals("maxInclusive"	)
+                            || tag.equals("minLength"   	)
+                            || tag.equals("maxLength"   	)
+                            || tag.equals("pattern"     	)
+                            || tag.equals("totalDigits" 	)
                             ) { // store the restriction in the anchestor element
                         Node value = attrs.getNamedItem("value");
                         if (value != null) {
                             anchBean.putRestriction(tag, value.getNodeValue());
                         }
 
-                    } else if (tag.equals("appinfo"      )
-                            || tag.equals("documentation")
+                    } else if (tag.equals("appinfo"      	)
+                            || tag.equals("documentation"	)
                             ) { // store the text content in the anchestor element
                         anchBean.putRestriction(tag, node.getTextContent().replaceAll("\\r?\\n", " "));
 
-                    } else if (tag.equals("restriction" )) {
+                    } else if (tag.equals("restriction" 	)) {
                         Node baseAttr = attrs.getNamedItem("base");
                         if (baseAttr != null) {
                             anchBean.setDataType(baseAttr.getNodeValue().replaceAll("xs:",""));
                         }
                         insertChildren(arrayIndex, children);
 
-                    } else if (tag.equals("schema"      )) {
+                    } else if (tag.equals("schema"      	)) {
                         targetAttr = attrs.getNamedItem("targetNamespace");
                         if (targetAttr != null) {
                             targetNamespace = targetAttr.getNodeValue();
                         }
                         insertChildren(arrayIndex, children);
 
-                    } else if (tag.equals("attribute"    ) && nameAttr != null) {
+                    } else if (tag.equals("attribute"    	) 
+                    		&& nameAttr != null) {
                         bean.setDisplayMode(SchemaBean.DISPLAY_ATTRIBUTE);
                         bean.setXPath(anchBean.getXPath() 
                                 + SchemaBean.XPATH_SEPARATOR + "@" 
@@ -494,7 +495,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                         typeAttr = attrs.getNamedItem("type");
                         expandChildrenAndType(arrayIndex, children, typeAttr);
 
-                    } else if (tag.equals("choice"      )) {
+                    } else if (tag.equals("choice"      	)) {
                         evalCardinality(arrayIndex, node);
                         switch(choiceResolution) {
                             default:
@@ -519,7 +520,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                                 break;
                         } // switch choiceResolution
 
-                    } else if (tag.equals("element"      )) { //  && nameAttr != null) {
+                    } else if (tag.equals("element"      	)) { //  && nameAttr != null) {
                         bean.setDisplayMode(SchemaBean.DISPLAY_ELEMENT);
                         if (firstElement) { // truncate
                             // truncate array after first element -
@@ -581,35 +582,35 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
                             // but do not expand children
                         } // found cyclic
 
-                    } else if (tag.equals("enumeration" )) {
+                    } else if (tag.equals("enumeration" 	)) {
                         Node valueNode = attrs.getNamedItem("value");
                         if (valueNode != null) {
-                            TreeSet/*<1.5*/<String>/*1.5>*/ sortedEnums = anchBean.getEnumerationSet();
+                            TreeSet<String> sortedEnums = anchBean.getEnumerationSet();
                             sortedEnums.add((String) valueNode.getNodeValue());
                             anchBean.putRestriction(SchemaBean.ENUMERATION_KEY, sortedEnums);
                         } // value attribute was present
 
-                    } else if (tag.equals("extension"   )) {
+                    } else if (tag.equals("extension"   	)) {
                         expandChildrenAndType(arrayIndex, children, attrs.getNamedItem("base"));
 
-                //  } else if (tag.equals("all"          )) {
-                //  } else if (tag.equals("any"          )) {
-                //  } else if (tag.equals("anyAttribute" )) {
-                //  } else if (tag.equals("attributeGroup")) {
-                //  } else if (tag.equals("field"       )) {
-                //  } else if (tag.equals("group"       )) {
-                //  } else if (tag.equals("import"      )) {
-                //  } else if (tag.equals("include"     )) {
-                //  } else if (tag.equals("key"         )) {
-                //  } else if (tag.equals("keyref"      )) {
-                //  } else if (tag.equals("length"      )) {
-                //  } else if (tag.equals("list"        )) {
-                //  } else if (tag.equals("notation"    )) {
-                //  } else if (tag.equals("redefine"    )) {
-                //  } else if (tag.equals("selector"    )) {
-                //  } else if (tag.equals("union"       )) {
-                //  } else if (tag.equals("unique"      )) {
-                //  } else if (tag.equals("whiteSpace"  )) {
+                //  } else if (tag.equals("all"          	)) {
+                //  } else if (tag.equals("any"          	)) {
+                //  } else if (tag.equals("anyAttribute" 	)) {
+                //  } else if (tag.equals("attributeGroup"	)) {
+                //  } else if (tag.equals("field"       	)) {
+                //  } else if (tag.equals("group"       	)) {
+                //  } else if (tag.equals("import"      	)) {
+                //  } else if (tag.equals("include"     	)) {
+                //  } else if (tag.equals("key"         	)) {
+                //  } else if (tag.equals("keyref"      	)) {
+                //  } else if (tag.equals("length"      	)) {
+                //  } else if (tag.equals("list"        	)) {
+                //  } else if (tag.equals("notation"    	)) {
+                //  } else if (tag.equals("redefine"    	)) {
+                //  } else if (tag.equals("selector"    	)) {
+                //  } else if (tag.equals("union"       	)) {
+                //  } else if (tag.equals("unique"      	)) {
+                //  } else if (tag.equals("whiteSpace"  	)) {
                     } else {
                         // do not walk into any other node
                 //      log.error("unknown node name " + tag);
@@ -673,7 +674,7 @@ public class SchemaArray extends ArrayList/*<1.5*/<SchemaBean>/*1.5>*/ {
             root.setLevel(0);
             root.setXPath("");
             add(root);
-            setanchBean(root); // just for safety, we hope for an initial element bean in the schema
+            setAnchestorBean(root); // just for safety, we hope for an initial element bean in the schema
 
             expand(0);
         } catch (Exception exc) {

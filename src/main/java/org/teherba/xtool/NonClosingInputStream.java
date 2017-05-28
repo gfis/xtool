@@ -1,5 +1,6 @@
-/*  for reading ZIP files in a servlet  
+/*  for reading ZIP files in a servlet
  *  @(#) $Id: NonClosingInputStream.java 439 2010-06-01 09:59:59Z gfis $
+ *  2017-05-28: javadoc 1.8
  *  2007-11-09: Georg Fischer
  */
 /*
@@ -22,20 +23,21 @@ import  java.io.FilterInputStream;
 import  java.io.InputStream;
 
 /** Shields the close() method in order to read ZIP files in a servlet
- * 	@author Dr. Georg Fischer
+ *  @author Dr. Georg Fischer
  */
 public class NonClosingInputStream extends FilterInputStream {
-	
-	/** Empty Constructor
-	 */
+
+    /** Empty Constructor
+     *  @param in base input stream
+     */
     public NonClosingInputStream (InputStream in) {
         super(in);
-    } // Constructor 
+    } // Constructor
 
-    /** close() implemention which does nothing
+    /** close() implementation which does nothing
      */
     public void close() {
     } // close
 
 } // NonClosingInputStream
-    
+

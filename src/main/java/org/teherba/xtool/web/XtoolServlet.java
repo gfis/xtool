@@ -1,5 +1,6 @@
 /*  Servlet for several XML utilities: W3C schema as an indented list, XML namespaces and their prefixes
     @(#) $Id: XtoolServlet.java 523 2010-07-26 17:57:50Z gfis $
+    2017-05-28: javadoc 1.8
     2016-09-01: remove JSPs and session
     2015-08-06: import java.util.zip.* from jazzlib.sourceforge.net
     2008-02-13: SchemaTree removed
@@ -54,8 +55,7 @@ import  org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import  org.apache.commons.fileupload.servlet.ServletFileUpload;
 import  org.apache.log4j.Logger;
 
-/**
- *  Servlet which is the web application wrapper for the commandline tools
+/** Servlet which is the web application wrapper for the commandline tools
  *  <ul>
  *  <li>{@link SchemaList}</li>
  *  <li>{@link XmlnsPrefix}</li>
@@ -79,7 +79,7 @@ public class XtoolServlet extends HttpServlet {
 
     /** Called by the servlet container to indicate to a servlet
      *  that the servlet is being placed into service.
-     *  @throws ServletException
+     *  @throws ServletException for initialization errors
      */
     public void init() throws ServletException {
         log = Logger.getLogger(XtoolServlet.class.getName());
@@ -90,7 +90,7 @@ public class XtoolServlet extends HttpServlet {
     /** Creates the response for a HTTP GET request.
      *  @param request fields from the client input form
      *  @param response data to be sent back the user's browser
-     *  @throws IOException
+     *  @throws IOException for IO erros
      */
     public void doGet (HttpServletRequest request, HttpServletResponse response) throws IOException {
         generateResponse(request, response);
@@ -99,7 +99,7 @@ public class XtoolServlet extends HttpServlet {
     /** Creates the response for a HTTP POST request.
      *  @param request fields from the client input form
      *  @param response data to be sent back the user's browser
-     *  @throws IOException
+     *  @throws IOException for IO erros
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         generateResponse(request, response);
@@ -108,7 +108,7 @@ public class XtoolServlet extends HttpServlet {
     /** Creates the response for a HTTP GET or POST request.
      *  @param request fields from the client input form
      *  @param response data to be sent back the user's browser
-     *  @throws IOException
+     *  @throws IOException for IO erros
      */
     public void generateResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String view     = BasePage.getInputField(request, "view"  , "index");

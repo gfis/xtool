@@ -1,6 +1,7 @@
 /*  Converts an XML file to XHTML and puts data links to XPathes
  *  on all elements and attributes.
     @(#) $Id: XPathLink.java 523 2010-07-26 17:57:50Z gfis $
+    2017-05-28: javadoc 1.8
     2007-09-27, Georg Fischer: copied from XmlnsXref
 */
 /*
@@ -51,14 +52,14 @@ public class XPathLink {
     private String sourceEncoding;
     /** encoding for output (file) */
     private String targetEncoding;
-        
+
     /** Writer for XML output */
     private XMLEventWriter writer;
     /** current cursor in test case file */
     private XMLEventReader reader;
     /** streaming event factory */
     private XMLEventFactory factory;
-    
+
     /** No-args Constructor */
     public XPathLink() {
         log             = Logger.getLogger(XPathLink.class.getName());
@@ -67,14 +68,15 @@ public class XPathLink {
         writer          = null;
     } // Constructor XPathLink
 
-    /** Returns some text with HTML emphasis 
+    /** Returns some text with HTML emphasis
      *  @param css CSS class designator for emphasis
      *  @param text text to be emphasized
+     *  @return emphasized string
      */
     private String emphasize(String css, String text) {
         return ("<span class=\"" + css + "\">" + text + "</span>");
     } // emphasisze
-            
+
     /** Evaluates the commandline arguments and remembers them
      *  @param args the command line arguments, see {@link #main} method.
      *  @return index of first non-option argument (behind all options with leading dashes)
@@ -135,12 +137,12 @@ public class XPathLink {
             while (reader.hasNext()) {
                 event = (XMLEvent) reader.next();
                 switch (event.getEventType()) { // depending on event type
-                    
+
                     case XMLStreamConstants.START_DOCUMENT:
                         writer.add(factory.createStartDocument
-                                ( targetEncoding != null 
-                                		? targetEncoding 
-                                		: ((StartDocument) event).getCharacterEncodingScheme()
+                                ( targetEncoding != null
+                                        ? targetEncoding
+                                        : ((StartDocument) event).getCharacterEncodingScheme()
                                 , ((StartDocument) event).getVersion()
                                 , ((StartDocument) event).isStandalone()
                                 ));
@@ -151,25 +153,25 @@ public class XPathLink {
                         qName = event.asStartElement().getName();
                         localPart = qName.getLocalPart();
                         // log.debug("qName: " + qName.getPrefix() + ":" + qName.getLocalPart());
-						obj = null;
+                        obj = null;
                         if (obj != null) { // has an URI which is mapped
-						/*
+                        /*
                             event = factory.createStartElement((String) obj, uri, localPart
                                     , event.asStartElement().getAttributes()
                                     , namespaces.iterator()
                                     );
-                        */  
-                        } 
+                        */
+                        }
                         writer.add(event);
                         break; // START_ELEMENT
 
                     case XMLStreamConstants.END_ELEMENT:
                         qName = event.asEndElement().getName();
                         localPart = qName.getLocalPart();
-						obj = null;
+                        obj = null;
                         if (obj != null) { // has an URI which is mapped
                             event = factory.createEndElement((String) obj, uri, localPart);
-                        } 
+                        }
                         writer.add(event);
                         break; // END_ELEMENT
 
@@ -193,7 +195,7 @@ public class XPathLink {
     /*=======================*/
     /* Main method           */
     /*=======================*/
-    
+
     /** Main program, processes commandline arguments.
      *  @param args the command line arguments; typical activation:
      *  <pre>
@@ -214,6 +216,6 @@ public class XPathLink {
         } catch (Exception exc) {
             linker.log.error(exc.getMessage(), exc);
         } // try
-    } // main 
-    
+    } // main
+
 } // XPathLink

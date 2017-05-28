@@ -1,5 +1,6 @@
 /*  Transforms (reads) XML files
     @(#) $Id: XmlnsXref.java 523 2010-07-26 17:57:50Z gfis $
+    2017-05-28: javadoc 1.8
     2010-06-13: ZipInputStream with ISO-8859-1 bug (solved by jazzlib), and link tag
     2007-08-13: read ZIP file(s)
     2007-03-29, Georg Fischer: copied from SwiftTransformer
@@ -42,7 +43,7 @@ import  org.apache.log4j.Logger;
  *  and generates a crossreference listing as a HTML definition list.
  *  @author Dr. Georg Fischer
  */
-public class XmlnsXref extends DefaultHandler { 
+public class XmlnsXref extends DefaultHandler {
     public final static String CVSID = "@(#) $Id: XmlnsXref.java 523 2010-07-26 17:57:50Z gfis $";
     //                                  01234567890123456789012345678901234567890123
     //                                            1         2         3         4
@@ -53,7 +54,7 @@ public class XmlnsXref extends DefaultHandler {
     public Logger log;
     /** newline character(s) */
     private String nl;
-    
+
     /** whether to replace sums and counters by a transformation stylesheet */
     private int withPrefixes;
     /** whether to write debugging comments */
@@ -73,7 +74,7 @@ public class XmlnsXref extends DefaultHandler {
     private String encoding;
     /** Separator for partial key fields */
     private static final String SEPARATOR = "|";
-            
+
     /** No-args constructor
      */
     public XmlnsXref() {
@@ -86,34 +87,34 @@ public class XmlnsXref extends DefaultHandler {
         isZipped    = 0;
         // out          = new StringWriter(131072);
     } // Constructor
-    
+
     /** Display help: commandline options and arguments
      */
     private void usage() {
         System.err.println
                 ( "Crossreference of namespace URIs, V" + versionString + nl
-                + "Usage:" + nl 
+                + "Usage:" + nl
                 + "  java org.teherba.xtool.XmlnsXref [-e encoding] [-p] [-zip] [file ...]" + nl
                 + "  -e   encoding UTF-8 (default), ISO-8859-1, US-ASCII etc." + nl
                 + "  -p   with namespace prefixes" + nl
                 + "  -zip following file is zipped" + nl
                 );
     } // usage
-    
+
     /** Sets the name of the XML file which was analyzed
      *  @param fileName name of the input file
      */
     public void setFileName(String fileName) {
         xmlFileName = fileName;
     } // setFileName
-    
-    /** Sets the writer for the HTML output (file) 
+
+    /** Sets the writer for the HTML output (file)
      *  @param writer writer for the output file
      */
     public void setWriter(PrintWriter writer) {
         out = writer;
     } // setWriter
-    
+
     /** Pushes an XML tag, starts a new element with an attribute string
      *  @param tag tag for the element
      *  @param attrs string of attributes
@@ -196,11 +197,11 @@ public class XmlnsXref extends DefaultHandler {
             xmlStart("body");
             xmlStart("h2"); xmlChars("List of Namespace URIs"); xmlEnd();
             xmlStart("dl");
-            String 
+            String
             oldURI = "";
-            Iterator/*<1.5*/<String>/*1.5>*/ 
+            Iterator/*<1.5*/<String>/*1.5>*/
             iter = rows.keySet().iterator();
-            boolean 
+            boolean
             busy = true;
             while (busy && iter.hasNext()) { // check for group changes
                 String key = (String) iter.next();
@@ -213,12 +214,12 @@ public class XmlnsXref extends DefaultHandler {
                     oldURI = uri;
                     if (! uri.startsWith(zzzz)) { // terminate group change checking loop
                         xmlStart("a", "href=\"#" + uri.replaceAll("[\\:\\.\\$]", "_") + "\"");
-                        xmlStart("dt"); 
-                        xmlChars(uri);  
+                        xmlStart("dt");
+                        xmlChars(uri);
                         xmlEnd(); // dt
                         xmlEnd(); // a
                     } else { // dummy entry at the end - break the loop
-                        busy = false;                   
+                        busy = false;
                     }
                 } else { // same URI as previous
                 } // same URI
@@ -240,23 +241,23 @@ public class XmlnsXref extends DefaultHandler {
                 if (! uri.equals(oldURI)) { // group change
                     oldURI = uri;
                     if (! uri.startsWith(zzzz)) { // terminate group change checking loop
-                        xmlStart("dt"); 
+                        xmlStart("dt");
                         xmlEmpty("a", "name=\"" + uri.replaceAll("[\\:\\.\\$]", "_") + "\"");
-                        xmlChars(uri);  
+                        xmlChars(uri);
                         xmlEnd();
                     } else { // dummy entry at the end - break the loop
-                        busy = false;                   
+                        busy = false;
                     }
                 } else { // same URI as previous
                 } // same URI
                 if (busy) {
-                    xmlStart("dd"); 
+                    xmlStart("dd");
                     if (withPrefixes > 0) {
                         xmlChars(prefix + ": ");
                     } // with withPrefixes
-                    xmlChars(fileName); 
+                    xmlChars(fileName);
                     xmlEnd(); // dd
-                } // if busy 
+                } // if busy
             } // while checking for group changes
             xmlEnd(); // dl
             xmlEnd(); // body
@@ -266,13 +267,13 @@ public class XmlnsXref extends DefaultHandler {
             log.error(exc.getMessage(), exc);
         }
     } // serialize
-        
+
     /** Analyzes one XML input file, and remembers the filename, namespace URIs and
      *  corresponding prefixes.
      *  @param stream stream for the XML file to be analyzed
      */
     public void analyze(InputStream stream) {
-        if (xmlFileName.matches(".*\\.x(ml|sl|sd)")) {          
+        if (xmlFileName.matches(".*\\.x(ml|sl|sd)")) {
             try {
                 XMLReader parser = XMLReaderFactory.createXMLReader();
                 parser.setContentHandler(this);
@@ -290,7 +291,7 @@ public class XmlnsXref extends DefaultHandler {
             // ignore all other filetypes
         }
     } // analyze
-    
+
     /** Process the commandline arguments and renames
      *  the namespace prefixes in the file accordingly.
      *  @param iargs index of 1st argument to be processed
@@ -323,10 +324,11 @@ public class XmlnsXref extends DefaultHandler {
         return result;
     } // getOptions
 
-    /** Processes the commandline arguments and 
+    /** Processes the commandline arguments and
      *  extracts the namespace URIs
      *  @param iargs index of 1st argument to be processed
      *  @param args commandline arguments as strings
+     *  @return index of next unprocessed commandline argument
      */
     public int process(int iargs, String args[]) {
         try {
@@ -348,7 +350,7 @@ public class XmlnsXref extends DefaultHandler {
         } // try
         return iargs;
     } // process
-    
+
     /*=======================*/
     /* Main method           */
     /*=======================*/
@@ -373,7 +375,7 @@ public class XmlnsXref extends DefaultHandler {
             xref.setWriter(new PrintWriter(Channels.newWriter(target, "UTF-8")));
         */
             xref.setWriter(new PrintWriter(Channels.newWriter(Channels.newChannel(System.out), "UTF-8")));
-            xref.serialize();   
+            xref.serialize();
         } catch (Exception exc) {
             xref.log.error(exc.getMessage(), exc);
         }
@@ -398,7 +400,7 @@ public class XmlnsXref extends DefaultHandler {
         // log.debug(key + "\t" + xmlFileName);
         rows.put(key, xmlFileName);
     } // addEntry
-    
+
     /** Evaluate all attributes of a start element event
      *  @param attrs list of attributes of a start element event
      */
@@ -421,7 +423,7 @@ public class XmlnsXref extends DefaultHandler {
             log.error(exc.getMessage(), exc);
         }
     } // evalAttributes
-    
+
     /** Receive notification of the beginning of the document.
      */
     public void startDocument() {
@@ -430,18 +432,18 @@ public class XmlnsXref extends DefaultHandler {
             log.error(exc.getMessage(), exc);
         }
     } // startDocument
-    
+
     /** URI of W3C Schema */
     private static final String SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
-    
+
     /** Receive notification of the start of an element.
-     *  @param uri The Namespace URI, or the empty string if the element has no Namespace URI 
+     *  @param uri The Namespace URI, or the empty string if the element has no Namespace URI
      *  or if Namespace processing is not being performed.
-     *  @param localName the local name (without prefix), 
+     *  @param localName the local name (without prefix),
      *  or the empty string if Namespace processing is not being performed.
-     *  @param qName the qualified name (with prefix), 
+     *  @param qName the qualified name (with prefix),
      *  or the empty string if qualified names are not available.
-     *  @param attrs the attributes attached to the element. 
+     *  @param attrs the attributes attached to the element.
      *  If there are no attributes, it shall be an empty Attributes object.
      */
     public void startElement(String uri, String localName, String qName, Attributes attrs) {
@@ -477,13 +479,13 @@ public class XmlnsXref extends DefaultHandler {
             log.error(exc.getMessage(), exc);
         }
     } // startElement
-    
+
     /** Receive notification of the end of an element.
-     *  @param uri the Namespace URI, or the empty string if the element has no Namespace URI 
+     *  @param uri the Namespace URI, or the empty string if the element has no Namespace URI
      *  or if Namespace processing is not being performed.
-     *  @param localName the local name (without prefix), 
+     *  @param localName the local name (without prefix),
      *  or the empty string if Namespace processing is not being performed.
-     *  @param qName the qualified name (with prefix), 
+     *  @param qName the qualified name (with prefix),
      *  or the empty string if qualified names are not available.
      */
     public void endElement(String uri, String localName, String qName) {
@@ -492,11 +494,11 @@ public class XmlnsXref extends DefaultHandler {
             log.error(exc.getMessage(), exc);
         }
     } // endElement
-    
+
     /** Receive notification of character data inside an element.
      *  @param ch the characters.
      *  @param start the start position in the character array.
-     *  @param length the number of characters to use from the character array. 
+     *  @param length the number of characters to use from the character array.
      */
     public void characters(char[] ch, int start, int length) {
         try {
