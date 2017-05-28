@@ -1,6 +1,6 @@
 /*  Servlet for several XML utilities: W3C schema as an indented list, XML namespaces and their prefixes
     @(#) $Id: XtoolServlet.java 523 2010-07-26 17:57:50Z gfis $
-    2017-05-28: javadoc 1.8
+    2017-05-28: javadoc 1.8; List<FileItem>
     2016-09-01: remove JSPs and session
     2015-08-06: import java.util.zip.* from jazzlib.sourceforge.net
     2008-02-13: SchemaTree removed
@@ -130,10 +130,10 @@ public class XtoolServlet extends HttpServlet {
                 } else { // multipart
                     FileItemFactory fuFactory = new DiskFileItemFactory(); // Create a factory for disk-based file items
                     ServletFileUpload upload = new ServletFileUpload(fuFactory); // Create a new file upload handler
-                    List/*<FileItem>*/ items = upload.parseRequest(request); // Parse the request
+                    List<FileItem> items = upload.parseRequest(request); // Parse the request
                     FileItem fileItem[] = new FileItem[2];
                     int ifile = 0;
-                    Iterator/*<FileItem>*/ iter = items.iterator();
+                    Iterator<FileItem> iter = items.iterator();
                     while (iter.hasNext()) { // Process the uploaded items
                         FileItem item = (FileItem) iter.next();
                         if (item.isFormField()) {

@@ -224,7 +224,6 @@ public class SchemaList {
             schemaArray.setWithValues      (withValues);
             PrintStream printer = new PrintStream(outStream, true, resultEncoding);
             schemaArray.setPrintStream     (printer, resultEncoding); // options must have been set before
-
             schemaArray.loadSchema(inStream, sourceEncoding);
             schemaArray.simplify();
             schemaArray.print(getFileName(), resultEncoding);
