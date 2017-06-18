@@ -1,5 +1,6 @@
 /*  Renames element namespace prefixes in an XML files
     @(#) $Id: XmlnsPrefix.java 523 2010-07-26 17:57:50Z gfis $
+    2017-07-18: no 1.5 comments
     2008-02-19: Java 1.5 Generics; replace "xmlns:prefix" also
     2007-03-29, Georg Fischer: copied from SwiftTransformer
 */
@@ -20,6 +21,7 @@
  */
 
 package org.teherba.xtool;
+import  org.apache.log4j.Logger;
 import  java.io.FileInputStream;
 import  java.io.FileOutputStream;
 import  java.io.InputStream;
@@ -39,15 +41,13 @@ import  javax.xml.stream.events.Attribute;
 import  javax.xml.stream.events.Namespace;
 import  javax.xml.stream.events.StartDocument;
 import  javax.xml.stream.events.XMLEvent;
-// other
-import  org.apache.log4j.Logger;
 
 /** Renames element namespace prefixes in an XML file.
  *  Attribute namespaces are not handled at all.
- *  The default (empty prefix) namespace can be switched 
- *  to an explicit prefix, and vice versa. 
- *	The prefix in the namespace declarations (xmlns:ppp="...") is
- *	replaced, too.
+ *  The default (empty prefix) namespace can be switched
+ *  to an explicit prefix, and vice versa.
+ *  The prefix in the namespace declarations (xmlns:ppp="...") is
+ *  replaced, too.
  *  @author Dr. Georg Fischer
  */
 public class XmlnsPrefix {
@@ -60,30 +60,30 @@ public class XmlnsPrefix {
     private String sourceEncoding;
     /** encoding for output (file) */
     private String targetEncoding;
-        
+
     /** Writer for XML output */
     private XMLEventWriter writer;
     /** current cursor in test case file */
     private XMLEventReader reader;
     /** streaming event factory */
     private XMLEventFactory factory;
-    
-    /** maps URIs to new prefixes; the empty prefix stands for the default namespace */
-    private HashMap/*<1.5*/<String, String>/*1.5>*/ uriMap;
-    /** maps old to new prefixes: "old:new" maps "old" (key) to "new" (value) */
-    private HashMap/*<1.5*/<String, String>/*1.5>*/ prefixMap;
 
-    /** No-args Constructor 
+    /** maps URIs to new prefixes; the empty prefix stands for the default namespace */
+    private HashMap<String, String> uriMap;
+    /** maps old to new prefixes: "old:new" maps "old" (key) to "new" (value) */
+    private HashMap<String, String> prefixMap;
+
+    /** No-args Constructor
      */
     public XmlnsPrefix() {
         log             = Logger.getLogger(XmlnsPrefix.class.getName());
         factory         = XMLEventFactory.newInstance();
         reader          = null;
         writer          = null;
-        uriMap          = new HashMap/*<1.5*/<String, String>/*1.5>*/(16);
-        prefixMap       = new HashMap/*<1.5*/<String, String>/*1.5>*/(16);
-    } // Constructor 
-        
+        uriMap          = new HashMap<String, String>(16);
+        prefixMap       = new HashMap<String, String>(16);
+    } // Constructor
+
     /** Evaluates the commandline arguments and remembers them
      *  @param args the command line arguments, see {@link #main} method.
      *  @return index of first non-option argument (behind all options with leading dashes)
@@ -148,34 +148,34 @@ public class XmlnsPrefix {
             while (reader.hasNext()) {
                 event = (XMLEvent) reader.next();
                 switch (event.getEventType()) { // depending on event type
-                    
+
                     case XMLStreamConstants.START_ELEMENT:
                         qName = event.asStartElement().getName();
                         localPart = qName.getLocalPart();
                         // log.debug("qName: " + qName.getPrefix() + ":" + qName.getLocalPart());
-                        Iterator/*<1.5#/<Namespace>/#1.5>*/ nspIter = event.asStartElement().getNamespaces();
-                        ArrayList/*<1.5*/<Namespace>/*1.5>*/ namespaces = new ArrayList/*<1.5*/<Namespace>/*1.5>*/();
+                        Iterator nspIter = event.asStartElement().getNamespaces();
+                        ArrayList<Namespace> namespaces = new ArrayList<Namespace>();
                         while (nspIter.hasNext()) {
                             Namespace nsp = (Namespace) nspIter.next(); // Namespace extends Attribute
                             prefix = nsp.getPrefix();
-                            uri = nsp.getNamespaceURI(); 
-	                        log.debug("nsp: " + prefix + ":" + uri);
+                            uri = nsp.getNamespaceURI();
+                            log.debug("nsp: " + prefix + ":" + uri);
                             obj = prefixMap.get(prefix);
-                            if (obj != null) { // old prefix was found 
+                            if (obj != null) { // old prefix was found
                                 prefix = (String) obj; // mapped to newPrefix
                                 uriMap.put(uri, prefix);
                             } // else remains the same
                             namespaces.add(factory.createNamespace(prefix, uri));
                         } // while nspIter
-                        Iterator/*<1.5#/<Attribute>/#1.5>*/ attrIter = event.asStartElement().getAttributes();
-                        ArrayList/*<1.5*/<Attribute>/*1.5>*/ attrs = new ArrayList/*<1.5*/<Attribute>/*1.5>*/();
+                        Iterator attrIter = event.asStartElement().getAttributes();
+                        ArrayList<Attribute> attrs = new ArrayList<Attribute>();
                         while (attrIter.hasNext()) {
                             Attribute attr = (Attribute) attrIter.next();
                             QName qaName = attr.getName();
-	                        log.debug("qaName: " + qaName.getPrefix() + ":" + qaName.getLocalPart());
+                            log.debug("qaName: " + qaName.getPrefix() + ":" + qaName.getLocalPart());
                             attrs.add(factory.createAttribute(qaName, attr.getValue()));
                         } // while attrIter
-						
+
                         uri = qName.getNamespaceURI();
                         obj = uriMap.get(uri);
                         if (obj != null) { // has an URI which is mapped
@@ -184,7 +184,7 @@ public class XmlnsPrefix {
                                     , namespaces.iterator()
                                //   , event.asStartElement().getNamespaceContext()
                                     );
-                        } 
+                        }
                         writer.add(event);
                         break; // START_ELEMENT
 
@@ -195,15 +195,15 @@ public class XmlnsPrefix {
                         obj = uriMap.get(uri);
                         if (obj != null) { // has an URI which is mapped
                             event = factory.createEndElement((String) obj, uri, localPart);
-                        } 
+                        }
                         writer.add(event);
                         break; // END_ELEMENT
 
                     case XMLStreamConstants.START_DOCUMENT:
                         writer.add(factory.createStartDocument
-                                ( targetEncoding != null 
-                                		? targetEncoding 
-										: ((StartDocument) event).getCharacterEncodingScheme()
+                                ( targetEncoding != null
+                                        ? targetEncoding
+                                        : ((StartDocument) event).getCharacterEncodingScheme()
                                 , ((StartDocument) event).getVersion()
                                 , ((StartDocument) event).isStandalone()
                                 ));
@@ -247,6 +247,6 @@ public class XmlnsPrefix {
         } catch (Exception exc) {
             prefixer.log.error(exc.getMessage(), exc);
         } // try
-    } // main 
-    
+    } // main
+
 } // XmlnsPrefix
