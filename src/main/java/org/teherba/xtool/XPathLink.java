@@ -36,7 +36,8 @@ import  javax.xml.stream.XMLStreamConstants;
 import  javax.xml.stream.events.StartDocument;
 import  javax.xml.stream.events.XMLEvent;
 // other
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Converts an XML file to XHTML and puts data links to XPathes
  *  on all elements and attributes.
@@ -62,7 +63,7 @@ public class XPathLink {
 
     /** No-args Constructor */
     public XPathLink() {
-        log             = Logger.getLogger(XPathLink.class.getName());
+        log             = LogManager.getLogger(XPathLink.class.getName());
         factory         = XMLEventFactory.newInstance();
         reader          = null;
         writer          = null;

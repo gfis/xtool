@@ -37,7 +37,8 @@ import  org.xml.sax.InputSource;
 import  org.xml.sax.XMLReader;
 import  org.xml.sax.helpers.DefaultHandler;
 import  org.xml.sax.helpers.XMLReaderFactory;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Reads a set of XML files, extracts the namespace URIs and prefixes
  *  and generates a crossreference listing as a HTML definition list.
@@ -78,7 +79,7 @@ public class XmlnsXref extends DefaultHandler {
     /** No-args constructor
      */
     public XmlnsXref() {
-        log         = Logger.getLogger(XmlnsXref.class.getName());
+        log         = LogManager.getLogger(XmlnsXref.class.getName());
         nl          = System.getProperty("line.separator");
         rows        = new TreeMap/*<1.5*/<String, String>/*1.5>*/();
         stack       = new Stack/*<1.5*/<String>/*1.5>*/();

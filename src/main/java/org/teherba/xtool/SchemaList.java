@@ -31,7 +31,8 @@ import  java.io.FileOutputStream;
 import  java.io.InputStream;
 import  java.io.OutputStream;
 import  java.io.PrintStream;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Shows a W3C XML schema as a tree of elements;
  *  reads a schema (.xsd) file and prints the element nodes
@@ -86,7 +87,7 @@ public class SchemaList {
     /** No-args constructor
      */
     public SchemaList() {
-        log = Logger.getLogger(SchemaList.class.getName());
+        log = LogManager.getLogger(SchemaList.class.getName());
         nl = System.getProperty("line.separator");
         mode            = SchemaBean.MODE_PLAIN;
         debug           = 0;

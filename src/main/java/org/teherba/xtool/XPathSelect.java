@@ -36,7 +36,8 @@ import  org.apache.xml.serializer.DOMSerializer;
 import  org.apache.xml.serializer.Serializer;
 import  org.apache.xml.serializer.SerializerFactory;
 import  org.apache.xml.serializer.OutputPropertiesFactory;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Applies an XPath expression to STDIN or one or more files.
  *	JAXP 1.3 XPath API sample.
@@ -68,7 +69,7 @@ public class XPathSelect {
 
     /** Empty Constructor - creates a new instance of XPathSelect */
     public XPathSelect() {
-        log = Logger.getLogger(XPathSelect.class.getName());
+        log = LogManager.getLogger(XPathSelect.class.getName());
         // Create a new XPath
         xpath = XPathFactory.newInstance().newXPath();
         expression = "."; // default: current (root) context

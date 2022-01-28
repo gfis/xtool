@@ -35,7 +35,8 @@ import  java.util.TreeMap; // for sorted attributes
 import  java.util.TreeSet; // for sorted enumerations
 import  org.w3c.dom.Node;
 import  org.w3c.dom.NamedNodeMap;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Bean for a start or end of an element in a linear representation of a W3C Schema.
  *  A "bean" is an element of a "array", an array list of beans.
@@ -89,7 +90,7 @@ public class SchemaBean extends SchemaBeanBase {
     /** Initialization of static variables
      */
     static {
-        log = Logger.getLogger(SchemaBean.class.getName());
+        log = LogManager.getLogger(SchemaBean.class.getName());
     }
 
     /** No-args Constructor

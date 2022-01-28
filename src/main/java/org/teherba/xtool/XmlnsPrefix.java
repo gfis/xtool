@@ -21,7 +21,8 @@
  */
 
 package org.teherba.xtool;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 import  java.io.FileInputStream;
 import  java.io.FileOutputStream;
 import  java.io.InputStream;
@@ -76,7 +77,7 @@ public class XmlnsPrefix {
     /** No-args Constructor
      */
     public XmlnsPrefix() {
-        log             = Logger.getLogger(XmlnsPrefix.class.getName());
+        log             = LogManager.getLogger(XmlnsPrefix.class.getName());
         factory         = XMLEventFactory.newInstance();
         reader          = null;
         writer          = null;

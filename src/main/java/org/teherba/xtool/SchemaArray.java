@@ -42,7 +42,8 @@ import  org.w3c.dom.Node;
 import  org.w3c.dom.NodeList;
 import  org.w3c.dom.NamedNodeMap;
 import  org.xml.sax.InputSource;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Linear, indented representation (in the array) of all nodes which are visited
  *  during a width-first walk through the nodes in the DOM of a W3C Schema (XSD file).
@@ -96,7 +97,7 @@ public class SchemaArray extends ArrayList<SchemaBean> {
      */
     public SchemaArray() {
         super(4096);
-        log = Logger.getLogger(SchemaArray.class.getName());
+        log = LogManager.getLogger(SchemaArray.class.getName());
         nl = System.getProperty("line.separator");
         typeMap           = new TreeMap<String, Node>();
         pathStack         = new PathStack();

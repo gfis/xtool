@@ -26,7 +26,8 @@
 package org.teherba.xtool;
 import  org.teherba.xtool.PathElement;
 import  java.util.Stack;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Bean for a start or end of an element in a linear representation of a W3C Schema
  *  @author Dr. Georg Fischer
@@ -42,7 +43,7 @@ public class PathStack extends Stack<PathElement>/*1.5>*/ {
      */
     public PathStack() {
         super(); // create an empty stack
-        log = Logger.getLogger(PathStack.class.getName());
+        log = LogManager.getLogger(PathStack.class.getName());
     } // constructor
 
     //-----------------------------------

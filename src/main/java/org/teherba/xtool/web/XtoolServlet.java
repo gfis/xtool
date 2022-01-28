@@ -53,7 +53,8 @@ import  org.apache.commons.fileupload.FileItem;
 import  org.apache.commons.fileupload.FileItemFactory;
 import  org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import  org.apache.commons.fileupload.servlet.ServletFileUpload;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Servlet which is the web application wrapper for the commandline tools
  *  <ul>
@@ -82,7 +83,7 @@ public class XtoolServlet extends HttpServlet {
      *  @throws ServletException for initialization errors
      */
     public void init() throws ServletException {
-        log = Logger.getLogger(XtoolServlet.class.getName());
+        log = LogManager.getLogger(XtoolServlet.class.getName());
         basePage = new BasePage(APP_NAME);
         Messages.addMessageTexts(basePage);
     } // init
