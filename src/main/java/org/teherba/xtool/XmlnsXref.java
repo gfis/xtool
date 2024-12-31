@@ -1,12 +1,13 @@
 /*  Transforms (reads) XML files
     @(#) $Id: XmlnsXref.java 523 2010-07-26 17:57:50Z gfis $
+    2024-12-31: XMLReaderFactory was deprecated
     2017-05-28: javadoc 1.8
     2010-06-13: ZipInputStream with ISO-8859-1 bug (solved by jazzlib), and link tag
     2007-08-13: read ZIP file(s)
     2007-03-29, Georg Fischer: copied from SwiftTransformer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Dr. Georg Fischer <dr dot georg dot fischer at gmail dot kom>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +33,11 @@ import  java.util.Stack;
 import  java.util.TreeMap;
 import  java.util.zip.ZipEntry;
 import  java.util.zip.ZipInputStream;
+import  javax.xml.parsers.SAXParserFactory;
 import  org.xml.sax.Attributes;
 import  org.xml.sax.InputSource;
 import  org.xml.sax.XMLReader;
 import  org.xml.sax.helpers.DefaultHandler;
-import  org.xml.sax.helpers.XMLReaderFactory;
 import  org.apache.logging.log4j.Logger;
 import  org.apache.logging.log4j.LogManager;
 
@@ -276,7 +277,7 @@ public class XmlnsXref extends DefaultHandler {
     public void analyze(InputStream stream) {
         if (xmlFileName.matches(".*\\.x(ml|sl|sd)")) {
             try {
-                XMLReader parser = XMLReaderFactory.createXMLReader();
+                XMLReader parser = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
                 parser.setContentHandler(this);
                 parser.setErrorHandler  (this);
                 parser.setFeature       ("http://xml.org/sax/features/validation"        , false);

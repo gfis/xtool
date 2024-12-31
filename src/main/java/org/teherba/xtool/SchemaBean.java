@@ -11,7 +11,7 @@
  *  Caution, this file should be encoded in UTF-8: äöüÄÖÜß
  */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Dr. Georg Fischer <dr dot georg dot fischer at gmail dot kom>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -282,8 +282,8 @@ public class SchemaBean extends SchemaBeanBase {
 
     /** Generates an element's value (content) from a
      *  regular expression pattern terminated by a slash, for example
-     *  <tt>[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}/</tt> or
-     *  <tt>[+]{0,1}[0-9]{1,15}/</tt>.
+     *  <code>[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}/</code> or
+     *  <code>[+]{0,1}[0-9]{1,15}/</code>.
      *  This is an oversimplified algorithm which works well for SEPA,
      *  but which will fail in the general case.
      *  @param pat regular expression pattern
